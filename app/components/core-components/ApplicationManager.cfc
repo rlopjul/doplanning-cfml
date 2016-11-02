@@ -49,6 +49,7 @@
 		<cfargument name="moduleMessenger" type="boolean" required="false" default="false">
 		<cfargument name="moduleLdapUsers" type="boolean" required="false" default="false">
 		<cfargument name="moduleConvertFiles" type="boolean" required="false" default="false">
+		<cfargument name="moduleConvertFilesOfficeHome" type="string" required="false" default="/opt/libreoffice5.2/">
 		<cfargument name="moduleWeb" type="boolean" required="false" default="false">
 		<cfargument name="moduleTwitter" type="boolean" required="false" default="false">
 		<cfargument name="moduleConsultations" type="boolean" required="false" default="true">
@@ -118,6 +119,7 @@
 			<cfset APPLICATION.moduleMessenger = arguments.moduleMessenger><!---true/false--->
 			<cfset APPLICATION.moduleLdapUsers = arguments.moduleLdapUsers>
 			<cfset APPLICATION.moduleConvertFiles = arguments.moduleConvertFiles>
+			<cfset APPLICATION.moduleConvertFilesOfficeHome = arguments.moduleConvertFilesOfficeHome>
 			<cfset APPLICATION.moduleWeb = arguments.moduleWeb>
 			<cfset APPLICATION.moduleTwitter = arguments.moduleTwitter>
 			<cfset APPLICATION.moduleConsultations = arguments.moduleConsultations>
@@ -334,11 +336,41 @@
 				<cfset APPLICATION.twitterAccessToken = arguments.twitterAccessToken>
 				<cfset APPLICATION.twitterAccessTokenSecret = arguments.twitterAccessTokenSecret>
 			</cfif>
+
+			<cfif APPLICATION.moduleConvertFiles IS true>
+
+				<cfset var Manager = "">
+			  <cfset var Config  = "">
+
+			  <!--- Start an OfficeManager instance with the default settings --->
+			  <cfset Config = createObject("java", "org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration").init()>
+			  <cfset Config.setOfficeHome( APPLICATION.moduleConvertFilesOfficeHome )>
+			  <cfset Manager = Config.buildOfficeManager()>
+			  <cfset Manager.start()>
+
+			  <cfset APPLICATION.OfficeManager = Manager>
+
+			</cfif>
 			<!---<cfif APPLICATION.moduleWeb EQ true>
 				<cfset var paths = [expandPath("./app/WS/components/twitter4j-core-2.2.6-SNAPSHOT.jar")]>
 				<cfset APPLICATION.javaloader = createObject("component", "app.WS.components.javaloader.JavaLoader").init(paths)>
 				<cfset APPLICATION.Twitter = APPLICATION.javaloader.create("twitter4j.Twitter")>
 			</cfif>--->
+
+	</cffunction>
+
+
+	<!--- -------------------------------------- onApplicationEnd ----------------------------------- --->
+
+	<cffunction name="onApplicationEnd" access="public" returntype="void">
+		<cfargument name="ApplicationScope" required="true">
+
+		<cfif arguments.ApplicationScope.moduleConvertFiles IS true>
+
+				<!--- Stop the OfficeManager instance --->
+				<cfset arguments.ApplicationScope.OfficeManager.stop() >
+
+		</cfif>
 
 	</cffunction>
 

@@ -62,12 +62,21 @@
 	</cffunction>
 
 
+	<cffunction name="onApplicationEnd" output="false" returntype="void">
+
+		<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="onApplicationEnd">
+		</cfinvoke>
+
+	</cffunction>
+
+
 	<cffunction name="onRequestStart" output="false" returntype="void">
-			
+
 		<cfif NOT isDefined("APPLICATION.dsn")>
 			<cfinvoke method="onApplicationStart">
 		</cfif>
 
 	</cffunction>
+
 
 </cfcomponent>
