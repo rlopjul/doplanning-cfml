@@ -20,21 +20,17 @@
 		<!---<cftry>--->
 
 			<cfscript>
-				Config  = createObject("java", "org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration").init();
-				Config.setOfficeHome("/opt/libreoffice5.2/");
-				Manager = Config.buildOfficeManager();
 
-				try{
+				try {
 
-					Manager.start();
-
-					inPath = arguments.inputFilePath;
-					outPath = arguments.outputFilePath;
+					Manager = APPLICATION.OfficeManager;
 
 					OfficeDocumentConverter = createObject("java", "org.artofsolving.jodconverter.OfficeDocumentConverter");
 					converter = OfficeDocumentConverter.init( Manager );
-					input = createObject("java", "java.io.File").init( inPath );
-					output = createObject("java", "java.io.File").init( outPath );
+
+					input = createObject("java", "java.io.File").init( arguments.inputFilePath );
+					output = createObject("java", "java.io.File").init( arguments.outputFilePath );
+
 					Converter.convert(input, output);
 
 				} catch (any e) {
@@ -43,7 +39,6 @@
 
 				} finally {
 
-					Manager.stop();
 
 				}
 			</cfscript>
