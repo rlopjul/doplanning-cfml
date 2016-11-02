@@ -322,6 +322,28 @@
 
 		</cfif>
 
+		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
+
+			<div class="btn-group">
+
+				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
+
+				<!--- Convert files --->
+				<cfif APPLICATION.moduleConvertFiles EQ true>
+
+					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputConvertFileMenu">
+						<cfinvokeargument name="file_type" value=".#listLast(objectItem.attached_file_name,'.')#">
+						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
+						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+						<cfinvokeargument name="item_id" value="#item_id#">
+					</cfinvoke>
+
+				</cfif>
+
+			</div>
+
+		</cfif>
+
 		<cfif itemTypeId IS 20><!--- DoPlanning document--->
 
 			<div class="btn-group">
@@ -402,28 +424,6 @@
 			<cfif APPLICATION.changeElementsArea IS true>
 				<a href="item_change_area.cfm?item=#item_id#&itemTypeId=#itemTypeId#&area=#area_id#" class="btn btn-default btn-sm"><i class="icon-cut"></i> <span lang="es">Mover a otra área</span></a>
 			</cfif>
-			</div>
-
-		</cfif>
-
-		<cfif isNumeric(objectItem.attached_file_id) AND objectItem.attached_file_id GT 0>
-
-			<div class="btn-group">
-
-				<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-default btn-sm"><i class="icon-download-alt"></i> <span lang="es">Adjunto</span></a>
-
-				<!--- Convert files --->
-				<cfif APPLICATION.moduleConvertFiles EQ true>
-
-					<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="outputConvertFileMenu">
-						<cfinvokeargument name="file_type" value=".#listLast(objectItem.attached_file_name,'.')#">
-						<cfinvokeargument name="file_id" value="#objectItem.attached_file_id#">
-						<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-						<cfinvokeargument name="item_id" value="#item_id#">	
-					</cfinvoke>
-
-				</cfif>
-
 			</div>
 
 		</cfif>
