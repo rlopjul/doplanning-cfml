@@ -347,20 +347,18 @@
 
 		<cfset var method = "convertFile">
 
-		<!---
-		DESCOMENTAR
-		<cftry>--->
+		<cftry>
 
 			<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="response">
 				<cfinvokeargument name="file_id" value="#arguments.file_id#">
 				<cfinvokeargument name="file_type" value="#arguments.file_type#">
 			</cfinvoke>
 
-			<!---<cfcatch>
+			<cfcatch>
 				<cfinclude template="includes/errorHandlerStruct.cfm">
 			</cfcatch>
 
-		</cftry>--->
+		</cftry>
 
 		<cfreturn response>
 
