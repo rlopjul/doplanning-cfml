@@ -651,7 +651,7 @@
 
 					<!--- Can convert file to PDF --->
 					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="checkFileTypeConversion" returnvariable="isFileConvertedToPdf">
-						<cfinvokeargument name="file_type_from" value=".#fileQuery.file_type#">
+						<cfinvokeargument name="file_type_from" value="#fileQuery.file_type#">
 						<cfinvokeargument name="file_type_to" value=".pdf">
 					</cfinvoke>
 
