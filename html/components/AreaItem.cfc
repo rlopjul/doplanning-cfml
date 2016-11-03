@@ -3615,9 +3615,7 @@
 
 										<cfif len(itemsQuery.thumbnail_format) GT 0>
 										  <div class="media-left">
-										    <a href="">
-													<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail" class="media-object"/>
-										    </a>
+												<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail" class="media-object"/>
 										  </div>
 										</cfif>
 
