@@ -4,39 +4,63 @@ objectFile
 files_directory
 --->
 <cfsetting requesttimeout="#APPLICATION.filesTimeout#">
+
+<!--- Thumbnail --->
+<cfif isDefined("URL.thumbnail") AND URL.thumbnail IS true AND len(objectFile.thumbnail_format) GT 0>
+	<cfset thumb = true>
+	<cfset files_directory = files_directory&"_thumbnails">
+<cfelse>
+	<cfset thumb = false>
+</cfif>
+
 <cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>
 
+<cfif thumb IS true>
+	<cfset source = source&"_page_1"&objectFile.thumbnail_format>
+</cfif>
+
 <cfif FileExists(source)>
-	<cfset file_size = objectFile.file_size>
+
+	<cfif thumb IS false>
+
+		<cfset file_size = objectFile.file_size>
+
+		<cfif fileTypeId NEQ 4><!--- Si no es imagen de área --->
+
+			<!--- Esto antes se guardaba también en las imágenes de área --->
+			<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserDownloadedSpace">
+				<cfinvokeargument name="add_space" value="#file_size#">
+			</cfinvoke>
+			<!---Hay que guardar tambien el espacio total descargado por todos los usuarios por si se borra un usuario--->
+
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="addFileDownload">
+				<cfif isDefined("objectFile.id")>
+					<cfinvokeargument name="file_id" value="#objectFile.id#">
+				<cfelse>
+					<cfinvokeargument name="file_id" value="#objectFile.file_id#">
+				</cfif>
+				<cfinvokeargument name="user_id" value="#user_id#">
+				<cfinvokeargument name="file_size" value="#file_size#">
+				<cfif isDefined("URL.area") AND isNumeric(URL.area)>
+					<cfinvokeargument name="area_id" value="#URL.area#">
+				</cfif>
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+		</cfif>
+
+		<cfset file_name = objectFile.file_name>
+		<cfset file_type = objectFile.file_type>
 
 
-	<cfif fileTypeId NEQ 4><!--- Si no es imagen de área --->
+	<cfelse><!--- Thumbnail --->
 
-		<!--- Esto antes se guardaba también en las imágenes de área --->
-		<cfinvoke component="#APPLICATION.componentsPath#/UserManager" method="updateUserDownloadedSpace">
-			<cfinvokeargument name="add_space" value="#file_size#">
-		</cfinvoke>
-		<!---Hay que guardar tambien el espacio total descargado por todos los usuarios por si se borra un usuario--->
-
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="addFileDownload">
-			<cfif isDefined("objectFile.id")>
-				<cfinvokeargument name="file_id" value="#objectFile.id#">
-			<cfelse>
-				<cfinvokeargument name="file_id" value="#objectFile.file_id#">
-			</cfif>
-			<cfinvokeargument name="user_id" value="#user_id#">
-			<cfinvokeargument name="file_size" value="#file_size#">
-			<cfif isDefined("URL.area") AND isNumeric(URL.area)>
-				<cfinvokeargument name="area_id" value="#URL.area#">
-			</cfif>
-			<cfinvokeargument name="client_abb" value="#client_abb#">
-			<cfinvokeargument name="client_dsn" value="#client_dsn#">
-		</cfinvoke>
+		<cfset file_name = listFirst(objectFile.file_name,".")&"_thumb"&objectFile.thumbnail_format>
+		<cfset file_type = objectFile.thumbnail_format>
 
 	</cfif>
 
-	<cfset file_name = objectFile.file_name>
-	<cfset file_type = objectFile.file_type>
 
 	<cfinclude template="#APPLICATION.resourcesPath#/includes/get_file_content.cfm">
 
