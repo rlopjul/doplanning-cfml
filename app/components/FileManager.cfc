@@ -1643,7 +1643,7 @@
 		<cfinclude template="includes/functionStart.cfm">
 
 		<!---getFileTypesConversion--->
-		<cfinvoke component="FileTypeManager" method="getFileTypesConversion" returnvariable="queryFileTypes">
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileTypesConversion" returnvariable="queryFileTypes">
 			<cfinvokeargument name="file_type" value="#arguments.file_type_from#">
 		</cfinvoke>
 
@@ -1906,7 +1906,7 @@
 					<cfif APPLICATION.moduleConvertFiles EQ true>
 
 						<!---getFileTypesConversion--->
-						<cfinvoke component="FileTypeManager" method="getFileTypesConversion" returnvariable="objectFileTypes">
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileTypesConversion" returnvariable="objectFileTypes">
 							<cfinvokeargument name="file_type" value="#selectFileQuery.file_type#">
 						</cfinvoke>
 
@@ -3873,6 +3873,11 @@
 								thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
 								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
 							</cfquery>
+
+						<cfelseif APPLICATION.moduleConvertFiles IS true>
+
+
+
 
 						</cfif>
 

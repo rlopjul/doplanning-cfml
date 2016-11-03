@@ -14,7 +14,7 @@
 
 			<cftry>
 
-				<cfinvoke component="#APPLICATION.componentsPath#/FileTypeManager" method="getFileTypesConversion" returnvariable="fileTypeQuery">
+				<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileTypesConversion" returnvariable="fileTypeQuery">
 					<cfinvokeargument name="file_type" value="#arguments.file_type#"/>
 				</cfinvoke>
 
