@@ -1,11 +1,4 @@
-<!---Copyright Era7 Information Technologies 2007-2016
-
-    File created by: alucena
-    ColdFusion version required: 8
-    Last file change by: alucena
-    Date of last file change: 31-03-2010
-
---->
+<!--- Copyright Era7 Information Technologies 2007-2016 --->
 <cfcomponent output="false">
 
 	<cfset component = "FileConverter">
@@ -16,8 +9,6 @@
 		<cfargument name="outputFilePath" type="string" required="yes">
 
 		<cfset var method = "convertFile">
-
-		<!---<cftry>--->
 
 			<cfscript>
 
@@ -42,35 +33,6 @@
 
 				}
 			</cfscript>
-
-
-			<!---<cfobject type="java" class="com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter" name="jodDocumentConverter">
-			<cfobject type="java" class="com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection" name="jodOpenOfficeConnection">
-			<cfobject type="java" class="java.io.File" name="jodFile">
-
-			<cfset inputFile = jodFile.init(arguments.inputFilePath)>
-			<cfset outputFile = jodFile.init(arguments.outputFilePath)>
-
-			<cfset jodOpenOfficeConnection.init("localhost", 8100)>
-			<cfset jodOpenOfficeConnection.connect()>
-			<cfset success = jodOpenOfficeConnection.isConnected()>
-
-			<cfif success EQ "YES">
-			  <cfset jodDocumentConverter.init(jodOpenOfficeConnection)>
-			  <cfset jodDocumentConverter.convert(inputFile, outputFile)>
-			</cfif>
-
-			<cfset disconn = jodOpenOfficeConnection.disconnect()>--->
-
-			<!---<cfset xmlResponseContent = ''>--->
-
-			<!---<cfinclude template="includes/functionEnd.cfm">--->
-
-		<!---<cfcatch>
-			<cfinclude template="includes/errorHandler.cfm">
-		</cfcatch>--->
-
-		<!---<cfreturn xmlResponse>--->
 
 	</cffunction>
 
