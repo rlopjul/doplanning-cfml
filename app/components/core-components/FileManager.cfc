@@ -800,14 +800,15 @@
 
 					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="120">
 
-						<cfquery datasource="#client_dsn#" name="getFileConverted">
-							SELECT file_id, file_type, uploading_date, conversion_date
-							FROM #client_abb#_files_converted
-							WHERE file_id = <cfqueryparam value="#fileQuery.file_id#" cfsqltype="cf_sql_integer">
-							AND file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">;
-						</cfquery>
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesConverted" returnvariable="getFilesConvertedQuery">
+							<cfinvokeargument name="file_id" value="#fileQuery.file_id#">
+							<cfinvokeargument name="file_type" value="#file_type#">
 
-						<cfif getFileConverted.recordCount LT 1 OR getFileConverted.uploading_date LT fileQuery.uploading_date OR getFileConverted.uploading_date LT fileQuery.replacement_date>
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">	
+						</cfinvoke>
+
+						<cfif getFilesConvertedQuery.recordCount LT 1 OR getFilesConvertedQuery.uploading_date LT fileQuery.uploading_date OR getFilesConvertedQuery.uploading_date LT fileQuery.replacement_date>
 
 							<cfsetting requesttimeout="#APPLICATION.filesTimeout#">
 

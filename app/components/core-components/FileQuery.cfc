@@ -777,7 +777,7 @@
 	<!---Aquí se obtienen los tipos a los que se puede convertir un archivo--->
 
 	<cffunction name="getFileTypesConversion" access="public" returntype="query">
-		<cfargument name="file_type" type="string" required="yes">
+		<cfargument name="file_type" type="string" required="true">
 
 		<cfset var method = "getFileTypesConversion">
 
@@ -796,5 +796,31 @@
 
 	</cffunction>
 
+
+	<!----getFilesConverted--->
+
+	<cffunction name="getFilesConverted" access="public" returntype="query">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getFilesConverted">
+
+		<cfset var getFilesConvertedQuery = "">
+
+			<cfquery datasource="#client_dsn#" name="getFilesConvertedQuery">
+				SELECT file_id, file_type, uploading_date, conversion_date
+				FROM #client_abb#_files_converted
+				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.file_type")>
+					AND file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">
+				</cfif>;
+			</cfquery>
+
+		<cfreturn getFilesConvertedQuery>
+
+	</cffunction>
 
 </cfcomponent>
