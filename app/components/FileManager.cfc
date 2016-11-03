@@ -1642,22 +1642,19 @@
 
 		<cfinclude template="includes/functionStart.cfm">
 
-		<!---getFileTypesConversion--->
-		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFileTypesConversion" returnvariable="queryFileTypes">
-			<cfinvokeargument name="file_type" value="#arguments.file_type_from#">
-		</cfinvoke>
+			<cfquery datasource="#APPLICATION.dsn#" name="checkFileType">
+				SELECT file_type_to
+				FROM app_file_types_conversion
+				WHERE app_file_types_conversion.file_type_from = <cfqueryparam value="#arguments.file_type_from#" cfsqltype="cf_sql_varchar">
+				AND app_file_types_conversion.file_type_to = <cfqueryparam value="#arguments.file_type_to#" cfsqltype="cf_sql_varchar">
+				AND app_file_types_conversion.enabled = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint">;
+			</cfquery>
 
-		<cfquery dbtype="query" name="checkFileType">
-			SELECT file_type
-			FROM queryFileTypes
-			WHERE file_type = <cfqueryparam value="#arguments.file_type_to#" cfsqltype="cf_sql_varchar">;
-		</cfquery>
-
-		<cfif checkFileType.recordCount GT 0>
-			<cfset file_type_result = true>
-		<cfelse>
-			<cfset file_type_result = false>
-		</cfif>
+			<cfif checkFileType.recordCount GT 0>
+				<cfset file_type_result = true>
+			<cfelse>
+				<cfset file_type_result = false>
+			</cfif>
 
 		<cfreturn file_type_result>
 
