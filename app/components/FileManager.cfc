@@ -3833,6 +3833,59 @@
 
 				<cffile action="rename" source="#destination##temp_file#" destination="#destinationFile#">
 
+				<!--- Generate thumbnails --->
+				<cfif FileExists(destinationFile)>
+
+					<cfset destinationThumbnail = "#APPLICATION.filesPath#/#client_abb#/#fileTypeDirectory#_thumbnails/">
+
+					<cfif lCase(uploadedFile.clientFileExt) EQ "pdf">
+
+						<!--- Generate PDF thumbnail --->
+
+						<!---<cfif NOT directoryExists(destinationThumbnail)>
+							<cfdirectory action="create" directory="#destinationThumbnail#">
+						</cfif>--->
+
+						<cfset thumbnailFormat = "jpg">
+
+						<cfpdf action="thumbnail" source="#destinationFile#" pages="1" destination="#destinationThumbnail#" format="#thumbnailFormat#">
+
+						<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+							UPDATE #client_abb#_files
+							SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+							thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					<cfelseif listFind("jpg,jpeg,png,gif",lCase(uploadedFile.clientFileExt)) GT 0>
+
+						<!--- Generate Image thumbnail --->
+
+						<cfset thumbnailFormat = uploadedFile.clientFileExt>
+						<cfset destinationThumbnail = destinationThumbnail&upload_file_id>
+
+						<cfimage source="#destinationFile#" name="imageToScale">
+						<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
+						<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
+
+						<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+							UPDATE #client_abb#_files
+							SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+							thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+							WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
+						</cfquery>
+
+					</cfif>
+
+				<cfelse><!---The physical file does not exist--->
+
+					<cfset error_code = 608>
+
+					<cfthrow errorcode="#error_code#" detail="#source#">
+
+				</cfif>
+
+
 				<!--- MODULE ANTI VIRUS --->
 				<cfif APPLICATION.moduleAntiVirus IS true>
 
@@ -3880,39 +3933,6 @@
 						</cftry>
 
 					</cfthread>
-
-				</cfif>
-
-
-				<!--- Generate PDF thumbnail --->
-				<cfif uploadedFile.clientFileExt EQ "pdf">
-
-					<cfif FileExists(destinationFile)>
-
-						<cfset destinationThumbnail = "#APPLICATION.filesPath#/#client_abb#/#fileTypeDirectory#_thumbnails/">
-
-						<cfif NOT directoryExists(destinationThumbnail)>
-							<cfdirectory action="create" directory="#destinationThumbnail#">
-						</cfif>
-
-						<cfset thumbnailFormat = "jpg">
-
-						<cfpdf action="thumbnail" source="#destinationFile#" pages="1" destination="#destinationThumbnail#" format="#thumbnailFormat#">
-
-						<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
-							UPDATE #client_abb#_files
-							SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-							thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
-							WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-
-					<cfelse><!---The physical file does not exist--->
-
-						<cfset error_code = 608>
-
-						<cfthrow errorcode="#error_code#" detail="#source#">
-
-					</cfif>
 
 				</cfif>
 
