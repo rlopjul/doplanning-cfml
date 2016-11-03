@@ -339,7 +339,7 @@
 				<cfset APPLICATION.twitterAccessTokenSecret = arguments.twitterAccessTokenSecret>
 			</cfif>
 
-			<cfif APPLICATION.moduleConvertFiles IS true>
+			<cfif APPLICATION.moduleConvertFiles IS true AND NOT isDefined("APPLICATION.OfficeManager")>
 
 				<cfset var Manager = "">
 			  <cfset var Config  = "">
