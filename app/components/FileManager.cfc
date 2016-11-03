@@ -1471,7 +1471,7 @@
 				<cfif directoryExists(ExpandPath(fileConvertedDirectory))>
 
 					<!---getImageFiles--->
-					<cfinvoke component="FileConverter" method="getConvertedImages" returnvariable="convertedImages">
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileConverter" method="getConvertedImages" returnvariable="convertedImages">
 						<cfinvokeargument name="directory_path" value="#fileConvertedDirectory#">
 						<cfinvokeargument name="return_type" value="list">
 					</cfinvoke>
