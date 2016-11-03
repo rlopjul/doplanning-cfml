@@ -3833,55 +3833,60 @@
 
 				<cffile action="rename" source="#destination##temp_file#" destination="#destinationFile#">
 
-				<!--- Generate thumbnails --->
-				<cfif FileExists(destinationFile)>
+				<!--- MODULE THUMBNAILS --->
+				<cfif APPLICATION.moduleThumbnails IS true>
 
-					<cfset destinationThumbnail = "#APPLICATION.filesPath#/#client_abb#/#fileTypeDirectory#_thumbnails/">
+					<!--- Generate thumbnails --->
+					<cfif FileExists(destinationFile)>
 
-					<cfif lCase(uploadedFile.clientFileExt) EQ "pdf">
+						<cfset destinationThumbnail = "#APPLICATION.filesPath#/#client_abb#/#fileTypeDirectory#_thumbnails/">
 
-						<!--- Generate PDF thumbnail --->
+						<cfif lCase(uploadedFile.clientFileExt) EQ "pdf">
 
-						<!---<cfif NOT directoryExists(destinationThumbnail)>
-							<cfdirectory action="create" directory="#destinationThumbnail#">
-						</cfif>--->
+							<!--- Generate PDF thumbnail --->
 
-						<cfset thumbnailFormat = "jpg">
+							<!---<cfif NOT directoryExists(destinationThumbnail)>
+								<cfdirectory action="create" directory="#destinationThumbnail#">
+							</cfif>--->
 
-						<cfpdf action="thumbnail" source="#destinationFile#" pages="1" destination="#destinationThumbnail#" format="#thumbnailFormat#">
+							<cfset thumbnailFormat = "jpg">
 
-						<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
-							UPDATE #client_abb#_files
-							SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-							thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
-							WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
+							<cfpdf action="thumbnail" source="#destinationFile#" pages="1" destination="#destinationThumbnail#" format="#thumbnailFormat#">
 
-					<cfelseif listFind("jpg,jpeg,png,gif",lCase(uploadedFile.clientFileExt)) GT 0>
+							<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+								UPDATE #client_abb#_files
+								SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+								thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
 
-						<!--- Generate Image thumbnail --->
+						<cfelseif listFind("jpg,jpeg,png,gif",lCase(uploadedFile.clientFileExt)) GT 0>
 
-						<cfset thumbnailFormat = uploadedFile.clientFileExt>
-						<cfset destinationThumbnail = destinationThumbnail&upload_file_id>
+							<!--- Generate Image thumbnail --->
 
-						<cfimage source="#destinationFile#" name="imageToScale">
-						<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
-						<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
+							<cfset thumbnailFormat = uploadedFile.clientFileExt>
+							<cfset destinationThumbnail = destinationThumbnail&upload_file_id>
 
-						<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
-							UPDATE #client_abb#_files
-							SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-							thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
-							WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
-						</cfquery>
+							<cfimage source="#destinationFile#" name="imageToScale">
+							<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
+							<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
+
+							<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+								UPDATE #client_abb#_files
+								SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+								thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+
+						</cfif>
+
+					<cfelse><!---The physical file does not exist--->
+
+						<cfset error_code = 608>
+
+						<cfthrow errorcode="#error_code#" detail="#source#">
 
 					</cfif>
-
-				<cfelse><!---The physical file does not exist--->
-
-					<cfset error_code = 608>
-
-					<cfthrow errorcode="#error_code#" detail="#source#">
 
 				</cfif>
 
