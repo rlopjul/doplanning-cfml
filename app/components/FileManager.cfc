@@ -1389,7 +1389,7 @@
 			</cfinvoke>
 
 			<!---checkFileTypeConversion--->
-			<cfinvoke component="FileManager" method="checkFileTypeConversion" returnvariable="file_type_result">
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="checkFileTypeConversion" returnvariable="file_type_result">
 				<cfinvokeargument name="file_type_from" value="#objectFile.file_type#">
 				<cfinvokeargument name="file_type_to" value="#file_type#">
 			</cfinvoke>
@@ -1629,36 +1629,6 @@
 	</cffunction>
 
 
-	<!--- -------------------------- checkFileTypeConversion -------------------------------- --->
-	<!---Comprueba si se puede convertir un tipo de archivo o otro seleccionado--->
-
-	<cffunction name="checkFileTypeConversion" returntype="boolean" access="public">
-		<cfargument name="file_type_from" type="string" required="yes">
-		<cfargument name="file_type_to" type="string" required="yes">
-
-		<cfset var method = "checkFileTypeConversion">
-
-		<cfset var file_type_result = false>
-
-		<cfinclude template="includes/functionStart.cfm">
-
-			<cfquery datasource="#APPLICATION.dsn#" name="checkFileType">
-				SELECT file_type_to
-				FROM app_file_types_conversion
-				WHERE app_file_types_conversion.file_type_from = <cfqueryparam value="#arguments.file_type_from#" cfsqltype="cf_sql_varchar">
-				AND app_file_types_conversion.file_type_to = <cfqueryparam value="#arguments.file_type_to#" cfsqltype="cf_sql_varchar">
-				AND app_file_types_conversion.enabled = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint">;
-			</cfquery>
-
-			<cfif checkFileType.recordCount GT 0>
-				<cfset file_type_result = true>
-			<cfelse>
-				<cfset file_type_result = false>
-			</cfif>
-
-		<cfreturn file_type_result>
-
-	</cffunction>
 
 
 	<!--- ----------------------- SELECT FILE -------------------------------- --->
