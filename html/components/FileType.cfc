@@ -16,7 +16,6 @@
 
 				<cfinvoke component="#APPLICATION.componentsPath#/FileTypeManager" method="getFileTypesConversion" returnvariable="fileTypeQuery">
 					<cfinvokeargument name="file_type" value="#arguments.file_type#"/>
-					<cfinvokeargument name="return_type" value="query"/>
 				</cfinvoke>
 
 				<cfset response = {result=true, query=fileTypeQuery}>

@@ -1645,8 +1645,6 @@
 		<!---getFileTypesConversion--->
 		<cfinvoke component="FileTypeManager" method="getFileTypesConversion" returnvariable="queryFileTypes">
 			<cfinvokeargument name="file_type" value="#arguments.file_type_from#">
-
-			<cfinvokeargument name="return_type" value="query">
 		</cfinvoke>
 
 		<cfquery dbtype="query" name="checkFileType">
@@ -1910,8 +1908,6 @@
 						<!---getFileTypesConversion--->
 						<cfinvoke component="FileTypeManager" method="getFileTypesConversion" returnvariable="objectFileTypes">
 							<cfinvokeargument name="file_type" value="#selectFileQuery.file_type#">
-
-							<cfinvokeargument name="return_type" value="object">
 						</cfinvoke>
 
 					</cfif>
