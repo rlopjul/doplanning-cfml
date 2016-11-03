@@ -3618,6 +3618,10 @@
 										<h4>#titleContent#</h4>
 									</cfif>
 
+									<cfif len(itemsQuery.thumbnail_format) GT 0>
+										<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail"/>
+									</cfif>
+
 
 									<cfif itemTypeId EQ 10><!--- Files --->
 
