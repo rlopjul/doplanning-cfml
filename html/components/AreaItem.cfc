@@ -3611,24 +3611,17 @@
 								<div class="col-xs-12">
 
 
-
-									<div class="row">
+									<div class="media">
 
 										<cfif len(itemsQuery.thumbnail_format) GT 0>
-
-											<div class="col-sm-2">
-
-													<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail" class="pull-left"/>
-
-											</div><!--- END col-sm-4 --->
-
-											<div class="col-sm-8">
-
-										<cfelse>
-
-											<div class="col-sm-12">
-
+										  <div class="media-left">
+										    <a href="">
+													<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail" class="media-object"/>
+										    </a>
+										  </div>
 										</cfif>
+
+									  <div class="media-body">
 
 
 											<cfset titleContent = itemsQuery.title>
@@ -3825,9 +3818,9 @@
 												</cfif>
 											</div>--->
 
-										</div><!--- END col-sm-6 --->
+										</div><!--- END media-body --->
 
-									</div><!--- END row	--->
+									</div><!--- END media	--->
 
 
 
