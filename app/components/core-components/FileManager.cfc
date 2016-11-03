@@ -81,8 +81,10 @@
 		<cfset var fileTypeId = "">
 		<cfset var path = "">
 		<cfset var filePath ="">
+		<cfset var thumbnailFilePath = "">
 		<cfset var isApproved = "">
 		<cfset var itemCategories = "">
+
 
 
 			<cfif NOT isDefined("arguments.fileQuery")>
@@ -259,6 +261,14 @@
 						<cfelse><!---The physical file does not exist--->
 							<!---<cfset error_code = 608>
 							<cfthrow errorcode="#error_code#">--->
+						</cfif>
+
+						<!--- Delete thumbnail --->
+						<cfif fileQuery.thumbnail IS true>
+							<cfset thumbnailFilePath = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#_thumbnails/#fileQuery.id#'>
+							<cfif FileExists(thumbnailFilePath)>
+								<cffile action="delete" file="#thumbnailFilePath#">
+							</cfif>
 						</cfif>
 
 						<!---Update User Space Used--->
