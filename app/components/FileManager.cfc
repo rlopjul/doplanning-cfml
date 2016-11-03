@@ -3884,7 +3884,7 @@
 				</cfif>
 
 
-				<!--- PENDIENTE DE TERMINAR
+				<!--- Generate PDF thumbnail --->
 				<cfif uploadedFile.clientFileExt EQ "pdf">
 
 					<cfif FileExists(destinationFile)>
@@ -3915,7 +3915,6 @@
 					</cfif>
 
 				</cfif>
-				---->
 
 
 				<cfcatch><!---The upload fail--->
