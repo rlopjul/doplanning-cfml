@@ -706,6 +706,8 @@
 
 		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#">
 
+		<cffile action="rename" source="#arguments.destinationPath##arguments.file_id#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#"> 
+
 		<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
 			UPDATE #client_abb#_files
 			SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
