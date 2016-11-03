@@ -3610,208 +3610,230 @@
 
 								<div class="col-xs-12">
 
-									<cfset titleContent = itemsQuery.title>
-
-									<cfif arguments.generatePdf IS true>
-										<h3>#titleContent#</h3>
-									<cfelse>
-										<h4>#titleContent#</h4>
-									</cfif>
-
-									<cfif len(itemsQuery.thumbnail_format) GT 0>
-										<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail"/>
-									</cfif>
 
 
-									<cfif itemTypeId EQ 10><!--- Files --->
+									<div class="row">
 
-										<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
-											<cfinvokeargument name="file_name" value="#itemsQuery.file_name#"/>
-										</cfinvoke>
+										<cfif len(itemsQuery.thumbnail_format) GT 0>
 
-										<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#arguments.area_id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar" class="link_attached"><i class="#file_icon#"></i> #itemsQuery.file_name#</a><br>
+											<div class="col-sm-2">
 
-									<cfelse>
+													<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail" class="pull-left"/>
+
+											</div><!--- END col-sm-4 --->
+
+											<div class="col-sm-8">
+
+										<cfelse>
+
+											<div class="col-sm-12">
+
+										</cfif>
 
 
-										<cfif isNumeric(itemsQuery.attached_file_id) OR isNumeric(itemsQuery.attached_image_id) OR (len(itemsQuery.link) GT 0 AND itemsQuery.link NEQ "http://")>
+											<cfset titleContent = itemsQuery.title>
 
-											<div style="clear:both;margin-bottom:5px;">
+											<cfif arguments.generatePdf IS true>
+												<h3>#titleContent#</h3>
+											<cfelse>
+												<h4>#titleContent#</h4>
+											</cfif>
 
-												<cfif isNumeric(itemsQuery.attached_file_id)>
+											<cfif itemTypeId EQ 10><!--- Files --->
 
-													<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
-														<cfinvokeargument name="file_name" value="#itemsQuery.attached_file_name#"/>
-													</cfinvoke>
+												<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="file_icon">
+													<cfinvokeargument name="file_name" value="#itemsQuery.file_name#"/>
+												</cfinvoke>
 
-													<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_file_icon#"></i> #itemsQuery.attached_file_name#</a><br/>
+												<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&area=#arguments.area_id#<cfif arguments.deletedItems IS true>&bin=true</cfif>" target="_blank" onclick="return downloadFileLinked(this,event)" title="Descargar" class="link_attached"><i class="#file_icon#"></i> #itemsQuery.file_name#</a><br>
 
-													<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-default" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i></a>--->
+											<cfelse>
 
-													<!---<span class="divider">&nbsp;</span>--->
+
+												<cfif isNumeric(itemsQuery.attached_file_id) OR isNumeric(itemsQuery.attached_image_id) OR (len(itemsQuery.link) GT 0 AND itemsQuery.link NEQ "http://")>
+
+													<div style="clear:both;margin-bottom:5px;">
+
+														<cfif isNumeric(itemsQuery.attached_file_id)>
+
+															<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+																<cfinvokeargument name="file_name" value="#itemsQuery.attached_file_name#"/>
+															</cfinvoke>
+
+															<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_file_icon#"></i> #itemsQuery.attached_file_name#</a><br/>
+
+															<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_file_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-default" title="Descargar archivo adjunto"><i class="icon-paper-clip" style="font-size:14px;"></i></a>--->
+
+															<!---<span class="divider">&nbsp;</span>--->
+														</cfif>
+
+														<cfif isNumeric(itemsQuery.attached_image_id)>
+
+															<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_image_icon">
+																<cfinvokeargument name="file_name" value="#itemsQuery.attached_image_name#"/>
+															</cfinvoke>
+
+															<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_image_icon#"></i> #itemsQuery.attached_image_name#</a><br/>
+
+															<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-default" title="Descargar imagen adjunta"><i class="icon-camera" style="font-size:13px;"></i></a>--->
+
+															<!---<span class="divider">&nbsp;</span>--->
+														</cfif>
+
+														<cfif len(itemsQuery.link) GT 0 AND itemsQuery.link NEQ "http://">
+
+															<cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", itemsQuery.link) GT 0>
+
+																<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+																	<cfinvokeargument name="file_name" value="#itemsQuery.link#"/>
+																</cfinvoke>
+
+																<a href="#itemsQuery.link#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_file_icon#"></i> #listLast(itemsQuery.link, "=")#</a><br/>
+
+															<cfelse>
+																<a href="#itemsQuery.link#" target="_blank" class="link_external"><i class="icon-link"></i></a>
+																<a href="#itemsQuery.link#" target="_blank" class="link_external">#itemsQuery.link#</a><br/>
+															</cfif>
+
+														</cfif>
+
+													</div>
+
 												</cfif>
 
-												<cfif isNumeric(itemsQuery.attached_image_id)>
 
-													<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_image_icon">
-														<cfinvokeargument name="file_name" value="#itemsQuery.attached_image_name#"/>
-													</cfinvoke>
+											</cfif>
 
-													<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_image_icon#"></i> #itemsQuery.attached_image_name#</a><br/>
 
-													<!---<a href="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.attached_image_id#&#itemTypeName#=#itemsQuery.id#" onclick="return downloadFileLinked(this,event)" class="btn btn-sm btn-default" title="Descargar imagen adjunta"><i class="icon-camera" style="font-size:13px;"></i></a>--->
+											<cfset titleClass = "text_item">
 
-													<!---<span class="divider">&nbsp;</span>--->
+											<cfif itemTypeId IS 6 AND itemsQuery.done IS false><!--- Task not done --->
+												<cfif dateCompare(now(), itemsQuery.end_date, "d") IS 1>
+													<cfset titleClass = titleClass&" text_red">
 												</cfif>
+											</cfif>
 
-												<cfif len(itemsQuery.link) GT 0 AND itemsQuery.link NEQ "http://">
+											<cfif itemTypeId IS 5 OR itemTypeId IS 6><!--- Events, Tasks --->
 
-													<cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", itemsQuery.link) GT 0>
+												<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
+													<cfinvokeargument name="item_id" value="#itemsQuery.id#">
+													<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
+													<cfif arguments.deletedItems IS true>
+														<cfinvokeargument name="status" value="deleted">
+													</cfif>
+												</cfinvoke>
 
-														<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
-															<cfinvokeargument name="file_name" value="#itemsQuery.link#"/>
-														</cfinvoke>
+												<div style="font-size: 16px">
 
-														<a href="#itemsQuery.link#" target="_blank" onclick="return downloadFileLinked(this,event)" class="link_attached" title="Descargar"><i class="#attached_file_icon#"></i> #listLast(itemsQuery.link, "=")#</a><br/>
+													<b lang="es">Fecha de inicio</b> <span>#objectItem.start_date#
+													<cfif itemTypeId IS 5>#TimeFormat(objectItem.start_time,"HH:mm")#</cfif></span>&nbsp;
 
-													<cfelse>
-														<a href="#itemsQuery.link#" target="_blank" class="link_external"><i class="icon-link"></i></a>
-														<a href="#itemsQuery.link#" target="_blank" class="link_external">#itemsQuery.link#</a><br/>
+													<b lang="es">Fecha de fin</b> <span>#objectItem.end_date#
+													<cfif itemTypeId IS 5>#TimeFormat(objectItem.end_time,"HH:mm")#</cfif></span>&nbsp;
+
+
+													<cfif itemTypeId IS 5><!---Events--->
+														<b lang="es">Lugar</b> <span>#objectItem.place#</span>
+													<cfelse><!---Tasks--->
+														<b lang="es">Realizada</b> <span lang="es"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span>
 													</cfif>
 
+												</div>
+
+											<cfelseif itemTypeId IS 7><!--- Consultations --->
+
+												<div style="font-size: 16px">
+
+													<b lang="es">Estado</b> <span lang="es"><cfswitch expression="#itemsQuery.state#">
+														<cfcase value="created">Enviada</cfcase>
+														<cfcase value="read">Leída</cfcase>
+														<cfcase value="answered">Respondida</cfcase>
+														<cfcase value="closed"><strong lang="es">Cerrada</strong></cfcase>
+													</cfswitch></span>
+
+												</div>
+
+											<cfelseif itemTypeId IS 17><!--- Mailings --->
+
+												<div style="font-size: 16px">
+
+													<b lang="es">Estado</b> <cfswitch expression="#itemsQuery.state#">
+														<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
+														<cfcase value="modified"><span class="label label-default" lang="es">Modificado</span></cfcase>
+														<cfcase value="sent_to_test"><span class="label label-default" lang="es">Enviado a destinatarios para pruebas</span></cfcase>
+														<cfcase value="sent"><span class="label label-success" lang="es">Enviado</span></cfcase>
+													</cfswitch>
+
+													<!---<cfif itemsQuery.state NEQ "created" AND itemsQuery.state NEQ "modified"><br/>
+														<b lang="es">Fecha de <cfswitch expression="#itemsQuery.state#">
+															<cfcase value="sent_to_test">envío para pruebas</cfcase>
+															<cfcase value="sent">envío</cfcase>
+														</cfswitch>:</b> <span>#itemsQuery.last_update_date#</span>
+													</cfif>--->
+
+												</div>
+
+											<cfelseif itemTypeId IS 8><!--- Publications --->
+
+												<cfif len(itemsQuery.identifier) GT 0>
+												<!---<b lang="es">Identificador:</b> <span>#itemsQuery.identifier#</span>--->
+
+													<cfif isNumeric(itemsQuery.identifier) AND isNumeric(itemsQuery.sub_type_id) AND itemsQuery.sub_type_id IS 1>
+														<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&itemsQuery.identifier>
+														<div><!---<span>PubMed URL:</span>---><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a>
+														</div>
+													</cfif>
 												</cfif>
 
-											</div>
-
-										</cfif>
-
-
-									</cfif>
-
-
-									<cfset titleClass = "text_item">
-
-									<cfif itemTypeId IS 6 AND itemsQuery.done IS false><!--- Task not done --->
-										<cfif dateCompare(now(), itemsQuery.end_date, "d") IS 1>
-											<cfset titleClass = titleClass&" text_red">
-										</cfif>
-									</cfif>
-
-									<cfif itemTypeId IS 5 OR itemTypeId IS 6><!--- Events, Tasks --->
-
-										<cfinvoke component="#APPLICATION.htmlComponentsPath#/AreaItem" method="getItem" returnvariable="objectItem">
-											<cfinvokeargument name="item_id" value="#itemsQuery.id#">
-											<cfinvokeargument name="itemTypeId" value="#itemTypeId#">
-											<cfif arguments.deletedItems IS true>
-												<cfinvokeargument name="status" value="deleted">
-											</cfif>
-										</cfinvoke>
-
-										<div style="font-size: 16px">
-
-											<b lang="es">Fecha de inicio</b> <span>#objectItem.start_date#
-											<cfif itemTypeId IS 5>#TimeFormat(objectItem.start_time,"HH:mm")#</cfif></span>&nbsp;
-
-											<b lang="es">Fecha de fin</b> <span>#objectItem.end_date#
-											<cfif itemTypeId IS 5>#TimeFormat(objectItem.end_time,"HH:mm")#</cfif></span>&nbsp;
-
-
-											<cfif itemTypeId IS 5><!---Events--->
-												<b lang="es">Lugar</b> <span>#objectItem.place#</span>
-											<cfelse><!---Tasks--->
-												<b lang="es">Realizada</b> <span lang="es"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span>
 											</cfif>
 
-										</div>
+											<cfif itemTypeId EQ 17><!--- Mailing --->
 
-									<cfelseif itemTypeId IS 7><!--- Consultations --->
-
-										<div style="font-size: 16px">
-
-											<b lang="es">Estado</b> <span lang="es"><cfswitch expression="#itemsQuery.state#">
-												<cfcase value="created">Enviada</cfcase>
-												<cfcase value="read">Leída</cfcase>
-												<cfcase value="answered">Respondida</cfcase>
-												<cfcase value="closed"><strong lang="es">Cerrada</strong></cfcase>
-											</cfswitch></span>
-
-										</div>
-
-									<cfelseif itemTypeId IS 17><!--- Mailings --->
-
-										<div style="font-size: 16px">
-
-											<b lang="es">Estado</b> <cfswitch expression="#itemsQuery.state#">
-												<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
-												<cfcase value="modified"><span class="label label-default" lang="es">Modificado</span></cfcase>
-												<cfcase value="sent_to_test"><span class="label label-default" lang="es">Enviado a destinatarios para pruebas</span></cfcase>
-												<cfcase value="sent"><span class="label label-success" lang="es">Enviado</span></cfcase>
-											</cfswitch>
-
-											<!---<cfif itemsQuery.state NEQ "created" AND itemsQuery.state NEQ "modified"><br/>
-												<b lang="es">Fecha de <cfswitch expression="#itemsQuery.state#">
-													<cfcase value="sent_to_test">envío para pruebas</cfcase>
-													<cfcase value="sent">envío</cfcase>
-												</cfswitch>:</b> <span>#itemsQuery.last_update_date#</span>
-											</cfif>--->
-
-										</div>
-
-									<cfelseif itemTypeId IS 8><!--- Publications --->
-
-										<cfif len(itemsQuery.identifier) GT 0>
-										<!---<b lang="es">Identificador:</b> <span>#itemsQuery.identifier#</span>--->
-
-											<cfif isNumeric(itemsQuery.identifier) AND isNumeric(itemsQuery.sub_type_id) AND itemsQuery.sub_type_id IS 1>
-												<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&itemsQuery.identifier>
-												<div><!---<span>PubMed URL:</span>---><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a>
+												<div style="margin-top:10px;<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
+													#itemsQuery.description#
 												</div>
+
+											<cfelseif itemTypeId EQ 20><!--- DP Document --->
+
+												<div class="dp_document_container" <cfif arguments.generatePdf IS false>style="height:500px; overflow:scroll;margin-bottom:10px;"</cfif>>
+													#itemsQuery.description#
+												</div>
+
+											<cfelse>
+
+												<div class="lead item_description" style="<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
+													#itemsQuery.description#
+												</div>
+
 											</cfif>
-										</cfif>
 
-									</cfif>
+											<!---<div class="lead" style="clear:both;<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
+												<cfif itemTypeId NEQ 20 OR arguments.generatePdf IS true>
+													<p>#itemsQuery.description#</p>
+												<cfelse>
+													<!---<textarea name="description_#itemTypeId#_#itemsQuery.id#" class="form-control" readonly style="height:500px;">#itemsQuery.description#</textarea>
 
-									<cfif itemTypeId EQ 17><!--- Mailing --->
+													<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
+														<cfinvokeargument name="name" value="description_#itemTypeId#_#itemsQuery.id#">
+														<cfinvokeargument name="language" value="#SESSION.user_language#"/>
+														<cfinvokeargument name="height" value="500"/>
+														<cfinvokeargument name="toolbar" value="DP_document"/>
+														<cfinvokeargument name="readOnly" value="true"/>
+														<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
+														<cfinvokeargument name="toolbarCanCollapse" value="true"/>
+													</cfinvoke>--->
+												</cfif>
+											</div>--->
 
-										<div style="margin-top:10px;<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
-											#itemsQuery.description#
-										</div>
+										</div><!--- END col-sm-6 --->
 
-									<cfelseif itemTypeId EQ 20><!--- DP Document --->
+									</div><!--- END row	--->
 
-										<div class="dp_document_container" <cfif arguments.generatePdf IS false>style="height:500px; overflow:scroll;margin-bottom:10px;"</cfif>>
-											#itemsQuery.description#
-										</div>
 
-									<cfelse>
 
-										<div class="lead item_description" style="<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
-											#itemsQuery.description#
-										</div>
+								</div><!--- END col-xs-12 --->
 
-									</cfif>
-
-									<!---<div class="lead" style="clear:both;<cfif arguments.generatePdf IS false>margin-bottom:10px;</cfif>">
-										<cfif itemTypeId NEQ 20 OR arguments.generatePdf IS true>
-											<p>#itemsQuery.description#</p>
-										<cfelse>
-											<!---<textarea name="description_#itemTypeId#_#itemsQuery.id#" class="form-control" readonly style="height:500px;">#itemsQuery.description#</textarea>
-
-											<cfinvoke component="#APPLICATION.htmlComponentsPath#/CKEditorManager" method="loadComponent">
-												<cfinvokeargument name="name" value="description_#itemTypeId#_#itemsQuery.id#">
-												<cfinvokeargument name="language" value="#SESSION.user_language#"/>
-												<cfinvokeargument name="height" value="500"/>
-												<cfinvokeargument name="toolbar" value="DP_document"/>
-												<cfinvokeargument name="readOnly" value="true"/>
-												<cfinvokeargument name="toolbarStartupExpanded" value="false"/>
-												<cfinvokeargument name="toolbarCanCollapse" value="true"/>
-											</cfinvoke>--->
-										</cfif>
-									</div>--->
-
-								</div>
-
-							</div>
+							</div><!--- END row --->
 
 							<cfif arguments.deletedItems IS false>
 							<div class="row">
