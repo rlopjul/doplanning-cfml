@@ -263,6 +263,38 @@
 							<cfthrow errorcode="#error_code#">--->
 						</cfif>
 
+						<cfif APPLICATION.moduleConvertFiles IS true>
+
+							<cfset convertedFilesPath = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#_converted/#fileQuery.id#'>
+
+							<!--- Delete converted files ---->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesConverted" returnvariable="filesConvertedQuery">
+								<cfinvokeargument name="file_id" value="#fileQuery.file_id#">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+							<cfloop query="#filesConvertedQuery#">
+
+								<cfif filesConvertedQuery.file_type EQ ".html">
+
+
+								<cfelse>	
+
+									<cfset convertedFilePath = convertedFilesPath&filesConvertedQuery.file_type>
+
+									<cfif FileExists(convertedFilePath)>
+										<cffile action="delete" file="#convertedFilePath#">
+									</cfif>
+
+								</cfif>
+
+							</cfloop>
+
+						</cfif>
+
+
 						<!--- Delete thumbnail --->
 						<cfif fileQuery.thumbnail IS true>
 							<cfset thumbnailFilePath = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#_thumbnails/#fileQuery.id#'>
@@ -805,7 +837,7 @@
 							<cfinvokeargument name="file_type" value="#file_type#">
 
 							<cfinvokeargument name="client_abb" value="#client_abb#">
-							<cfinvokeargument name="client_dsn" value="#client_dsn#">	
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
 						</cfinvoke>
 
 						<cfif getFilesConvertedQuery.recordCount LT 1 OR getFilesConvertedQuery.uploading_date LT fileQuery.uploading_date OR getFilesConvertedQuery.uploading_date LT fileQuery.replacement_date>
