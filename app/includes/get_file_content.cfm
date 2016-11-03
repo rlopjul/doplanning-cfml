@@ -12,6 +12,7 @@ file_type
 <cfif isDefined("URL.thumb") AND URL.thumb IS true AND file_type EQ ".jpg"><!--- AND fileTypeId IS 1--->
 
 	<!--- PROVISIONAL PENDIENTE DE TERMINAR Y PROBAR BIEN: falta que funcione con archivos de área, con documentos PDF y que se borren los archivos al eliminarlos--->
+	<!--- Esto debe llamar al mismo método que se use en la subida de archivos --->
 
 	<cfif NOT isDefined("client_abb")>
 		<cfset client_abb = clientAbb>
@@ -51,7 +52,7 @@ Esto quitado porque por ahora no se puede usar gzip para esta aplicación
 <!---<cfheader name="Expires" value="#GetHttpTimeString(DateAdd('m', 1, Now()))#">--->
 
 <!---Para poder cargar un swf desde otra página o swf hay que quitar esto--->
-<cfif NOT isDefined("URL.open") OR URL.open EQ 0>
+<cfif ( NOT isDefined("URL.open") OR URL.open EQ 0 ) AND (NOT isDefined("thumb") OR thumb IS false)>
 	<cfheader name="Content-Disposition" value="attachment; filename=""#filename#""" charset="UTF-8">
 <cfelse>
 	<cfheader name="Content-Disposition" value="filename=""#filename#""" charset="UTF-8">
