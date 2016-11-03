@@ -839,10 +839,10 @@
 
 			</cfif>
 
-			<cfset var commonColums = "id, title, creation_date, IFNULL(last_update_date,creation_date) AS last_update_date, description, user_in_charge, last_update_user_id, area_id, NULL AS file_type_id">
-			<cfset var commonColumsWithoutLastUpdate = "id, title, creation_date, creation_date AS last_update_date, description, user_in_charge, NULL AS last_update_user_id, area_id, NULL AS file_type_id">
+			<cfset var commonColums = "id, title, creation_date, IFNULL(last_update_date,creation_date) AS last_update_date, description, user_in_charge, last_update_user_id, area_id, NULL AS file_type_id, NULL AS thumbnail_format">
+			<cfset var commonColumsWithoutLastUpdate = "id, title, creation_date, creation_date AS last_update_date, description, user_in_charge, NULL AS last_update_user_id, area_id, NULL AS file_type_id, NULL AS thumbnail_format">
 
-			<cfset var fileCommonColums = "id, name, uploading_date AS creation_date, IFNULL(replacement_date, uploading_date) AS last_update_date, description, user_in_charge, replacement_user, area_files.area_id, file_type_id"><!---IFNULL(replacement_date, uploading_date) AS creation_date--->
+			<cfset var fileCommonColums = "id, name, uploading_date AS creation_date, IFNULL(replacement_date, uploading_date) AS last_update_date, description, user_in_charge, replacement_user, area_files.area_id, file_type_id, thumbnail_format"><!---IFNULL(replacement_date, uploading_date) AS creation_date--->
 
 			<cfif isDefined("arguments.area_type") AND len(arguments.area_type) GT 0><!--- WEB --->
 				<cfset commonColumsWebAdd = ", publication_date, publication_validated, publication_restricted">
