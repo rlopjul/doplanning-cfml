@@ -3873,7 +3873,25 @@
 
 						<cfelseif APPLICATION.moduleConvertFiles IS true>
 
+							<!--- Is file converted to PDF --->
+							<cfinvoke component="FileManager" method="checkFileTypeConversion" returnvariable="isFileConvertedToPdf">
+								<cfinvokeargument name="file_type_from" value=".#lCase(uploadedFile.clientFileExt)#">
+								<cfinvokeargument name="file_type_to" value=".pdf">
+							</cfinvoke>
 
+							<cfif isFileConvertedToPdf IS true>
+
+								<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="convertFileResponse">
+									<cfinvokeargument name="file_id" value="#upload_file_id#">
+									<cfinvokeargument name="file_type" value=".pdf">
+								</cfinvoke>
+
+								<cfif convertFileResponse.result IS true>
+
+
+								</cfif>
+
+							</cfif>
 
 
 						</cfif>
