@@ -15,10 +15,6 @@ files_directory
 
 <cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>
 
-<cfif thumb IS true AND objectFile.file_type EQ ".pdf">
-	<cfset source = source&"_page_1"&objectFile.thumbnail_format>
-</cfif>
-
 <cfif FileExists(source)>
 
 	<cfif thumb IS false>
