@@ -50,6 +50,7 @@
 		<cfargument name="moduleLdapUsers" type="boolean" required="false" default="false">
 		<cfargument name="moduleConvertFiles" type="boolean" required="false" default="false">
 		<cfargument name="moduleConvertFilesOfficeHome" type="string" required="false" default="/opt/libreoffice5.2/">
+		<cfargument name="moduleThumbnails" type="boolean" required="false" default="true">
 		<cfargument name="moduleWeb" type="boolean" required="false" default="false">
 		<cfargument name="moduleTwitter" type="boolean" required="false" default="false">
 		<cfargument name="moduleConsultations" type="boolean" required="false" default="true">
@@ -120,6 +121,7 @@
 			<cfset APPLICATION.moduleLdapUsers = arguments.moduleLdapUsers>
 			<cfset APPLICATION.moduleConvertFiles = arguments.moduleConvertFiles>
 			<cfset APPLICATION.moduleConvertFilesOfficeHome = arguments.moduleConvertFilesOfficeHome>
+			<cfset APPLICATION.moduleThumbnails = arguments.moduleThumbnails>
 			<cfset APPLICATION.moduleWeb = arguments.moduleWeb>
 			<cfset APPLICATION.moduleTwitter = arguments.moduleTwitter>
 			<cfset APPLICATION.moduleConsultations = arguments.moduleConsultations>
