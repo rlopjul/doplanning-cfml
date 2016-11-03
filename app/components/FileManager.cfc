@@ -1463,7 +1463,7 @@
 
 					</cflock>
 
-					<cfset response = {result=true, file_id=#file_id#, message=#file_convert_message#}>
+					<cfset response = {result=true, file_id=#file_id#, message=#file_convert_message#, file_converted_path=#file_converted#}>
 
 				<cfelse><!---The physical file does not exist--->
 
@@ -3829,80 +3829,13 @@
 				<!--- MODULE THUMBNAILS --->
 				<cfif APPLICATION.moduleThumbnails IS true>
 
-					<!--- Generate thumbnails --->
-					<cfif FileExists(destinationFile)>
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnail">
+						<cfinvokeargument name="file_id" value="#upload_file_id#">
+						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
 
-						<cfset destinationThumbnail = "#APPLICATION.filesPath#/#client_abb#/#fileTypeDirectory#_thumbnails/">
-
-						<cfif lCase(uploadedFile.clientFileExt) EQ "pdf">
-
-							<!--- Generate PDF thumbnail --->
-
-							<!---<cfif NOT directoryExists(destinationThumbnail)>
-								<cfdirectory action="create" directory="#destinationThumbnail#">
-							</cfif>--->
-
-							<cfset thumbnailFormat = "jpg">
-
-							<cfpdf action="thumbnail" source="#destinationFile#" pages="1" destination="#destinationThumbnail#" format="#thumbnailFormat#">
-
-							<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
-								UPDATE #client_abb#_files
-								SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-								thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
-								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
-							</cfquery>
-
-						<cfelseif listFind("jpg,jpeg,png,gif",lCase(uploadedFile.clientFileExt)) GT 0>
-
-							<!--- Generate Image thumbnail --->
-
-							<cfset thumbnailFormat = uploadedFile.clientFileExt>
-							<cfset destinationThumbnail = destinationThumbnail&upload_file_id>
-
-							<cfimage source="#destinationFile#" name="imageToScale">
-							<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
-							<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
-
-							<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
-								UPDATE #client_abb#_files
-								SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
-								thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
-								WHERE id = <cfqueryparam value="#upload_file_id#" cfsqltype="cf_sql_integer">;
-							</cfquery>
-
-						<cfelseif APPLICATION.moduleConvertFiles IS true>
-
-							<!--- Is file converted to PDF --->
-							<cfinvoke component="FileManager" method="checkFileTypeConversion" returnvariable="isFileConvertedToPdf">
-								<cfinvokeargument name="file_type_from" value=".#lCase(uploadedFile.clientFileExt)#">
-								<cfinvokeargument name="file_type_to" value=".pdf">
-							</cfinvoke>
-
-							<cfif isFileConvertedToPdf IS true>
-
-								<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="convertFileResponse">
-									<cfinvokeargument name="file_id" value="#upload_file_id#">
-									<cfinvokeargument name="file_type" value=".pdf">
-								</cfinvoke>
-
-								<cfif convertFileResponse.result IS true>
-
-
-								</cfif>
-
-							</cfif>
-
-
-						</cfif>
-
-					<cfelse><!---The physical file does not exist--->
-
-						<cfset error_code = 608>
-
-						<cfthrow errorcode="#error_code#" detail="#source#">
-
-					</cfif>
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
 
 				</cfif>
 
@@ -3985,6 +3918,7 @@
 		<cfreturn response>
 
 	</cffunction>
+
 
 
 

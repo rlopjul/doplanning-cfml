@@ -573,4 +573,147 @@
 	</cffunction>
 
 
+
+
+	<!--- ----------------------- GENERATE THUMBNAIL -------------------------------- --->
+
+	<cffunction name="generateThumbnail" returntype="void" output="false" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="fileTypeId" type="numeric" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "generateThumbnail">
+		<cfset var sourceFile = "">
+
+
+			<!--- getFile --->
+			<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFile" returnvariable="fileQuery">
+				<cfinvokeargument name="file_id" value="#arguments.file_id#">
+				<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+				<cfinvokeargument name="parse_dates" value="false">
+
+				<cfinvokeargument name="client_abb" value="#client_abb#">
+				<cfinvokeargument name="client_dsn" value="#client_dsn#">
+			</cfinvoke>
+
+			<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
+
+			<cfset sourceFile = "#APPLICATION.filesPath#/#arguments.client_abb#/">
+			<cfset sourceFile = sourceFile&"#fileTypeDirectory#/#fileQuery.physical_name#">
+
+
+			<!--- Generate thumbnails --->
+			<cfif FileExists(sourceFile)>
+
+				<cfset destinationThumbnail = "#APPLICATION.filesPath#/#arguments.client_abb#/#fileTypeDirectory#_thumbnails/">
+
+				<!---<cfif NOT directoryExists(destinationThumbnail)>
+						<cfdirectory action="create" directory="#destinationThumbnail#">
+				</cfif>--->
+
+				<cfif fileQuery.file_type EQ ".pdf">
+
+					<!--- Generate PDF thumbnail --->
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnailFromPdf" returnvariable="generateThumbnailResult">
+						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="sourceFile" value="#sourceFile#">
+						<cfinvokeargument name="destinationPath"	value="#destinationThumbnail#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+
+				<cfelseif listFind(".jpg,.jpeg,.png,.gif",fileQuery.file_type) GT 0>
+
+					<!--- Generate Image thumbnail --->
+
+					<cfset thumbnailFormat = fileQuery.file_type>
+
+					<cfset destinationThumbnail = destinationThumbnail&arguments.file_id>
+
+					<cfimage source="#sourceFile#" name="imageToScale">
+					<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
+					<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
+
+					<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+						UPDATE #client_abb#_files
+						SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+						thumbnail_format = <cfqueryparam value="#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+					</cfquery>
+
+				<cfelseif APPLICATION.moduleConvertFiles IS true>
+
+
+					<!--- Can convert file to PDF --->
+					<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="checkFileTypeConversion" returnvariable="isFileConvertedToPdf">
+						<cfinvokeargument name="file_type_from" value=".#fileQuery.file_type#">
+						<cfinvokeargument name="file_type_to" value=".pdf">
+					</cfinvoke>
+
+					<cfif isFileConvertedToPdf IS true>
+
+						<cfinvoke component="#APPLICATION.componentsPath#/FileManager" method="convertFile" returnvariable="convertFileResponse">
+							<cfinvokeargument name="file_id" value="#arguments.file_id#">
+							<cfinvokeargument name="file_type" value=".pdf">
+						</cfinvoke>
+
+						<cfif convertFileResponse.result IS true>
+
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnailFromPdf" returnvariable="generateThumbnailResult">
+								<cfinvokeargument name="file_id" value="#arguments.file_id#">
+								<cfinvokeargument name="sourceFile" value="#convertFileResponse.file_converted_path#">
+								<cfinvokeargument name="destinationPath"	value="#destinationThumbnail#">
+
+								<cfinvokeargument name="client_abb" value="#client_abb#">
+								<cfinvokeargument name="client_dsn" value="#client_dsn#">
+							</cfinvoke>
+
+						</cfif>
+
+					</cfif>
+
+
+				</cfif>
+
+			<cfelse><!---The physical file does not exist--->
+
+				<cfset error_code = 608>
+
+				<cfthrow errorcode="#error_code#" detail="#source#">
+
+			</cfif>
+
+
+	</cffunction>
+
+
+	<!--- ----------------------- GENERATE THUMBNAIL FROM PDF -------------------------------- --->
+
+	<cffunction name="generateThumbnailFromPdf" returntype="void" output="false" access="public">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="sourceFile" type="string" required="true">
+		<cfargument name="destinationPath" type="string" required="true">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset thumbnailFormat = "jpg">
+
+		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#">
+
+		<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+			UPDATE #client_abb#_files
+			SET thumbnail = <cfqueryparam value="1" cfsqltype="cf_sql_bit">,
+			thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
+			WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+		</cfquery>
+
+	</cffunction>
+
+
 </cfcomponent>
