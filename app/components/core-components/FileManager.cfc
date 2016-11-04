@@ -289,7 +289,10 @@
 								<cfif filesConvertedQuery.file_type EQ ".html">
 
 									<cfset convertedFilePath = ExpandPath("#APPLICATION.path#/#client_abb#/temp/files/#fileQuery.id#_html/")>
-									<cfset DirectoryDelete(convertedFilePath, true)>
+										
+									<cfif DirectoryExists(convertedFilePath)>
+										<cfset DirectoryDelete(convertedFilePath, true)>
+									</cfif>
 
 								<cfelse>
 
