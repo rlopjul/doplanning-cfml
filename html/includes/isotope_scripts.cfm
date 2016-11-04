@@ -94,20 +94,7 @@ $( document ).ready( function() {
   $itemsContainer = $('.elements_container').isotope({
     itemSelector: '.element_item',
     layoutMode: 'vertical',
-    transitionDuration: 0 <!--- en iPad las transiciones dan problemas https://github.com/metafizzy/isotope/issues/502--->
-    /*containerStyle : null*/
-    /*masonry: {
-	  columnWidth: '.grid-sizer'
-	}*/
-    <!---, containerStyle : { overflow: 'auto', position: 'relative'}--->
-    <!---, getSortData: {
-    	user: '.link_user',
-      	category: '[data-category]',
-      	// this function find h2 and remove accents
-	    title: function(itemElem) { // function
-	      return String($(itemElem).find('h4').text()).removeAccents();
-	    }
-    }--->
+    transitionDuration: 0 <!--- en iPad las transiciones dan problemas https://github.com/metafizzy/isotope/issues/502---> 
   });
 
   <cfif isDefined("URL.filter")>
@@ -120,19 +107,3 @@ $( document ).ready( function() {
 </script>
 
 </cfoutput>
-
-<!---<div>
-	<button onclick="setItemsFilter(*)">Todos</button>
-<div>
-<div>
-	<button onclick="$container.isotope({ filter: '.message' });">Filtrar mensaje</button>
-<div>
-<div>
-	<button onclick="$container.isotope({ filter: '.event' });">Filtrar eventos</button>
-<div>--->
-
-<!---<div>
-	<button onclick="$container.isotope({ sortBy: 'original-order' });">Orden original</button>
-	<button onclick="$container.isotope({ sortBy: 'user' });">Ordenar por usuario</button>
-	<button onclick="$container.isotope({ sortBy: 'title' });">Ordenar por título</button>
-<div>--->
