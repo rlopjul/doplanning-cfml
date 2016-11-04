@@ -1,4 +1,6 @@
 
+-- This script is required for the module to convert files with OpenOffice/LibreOffice
+
 CREATE TABLE `doplanning_app`.`app_file_types` (
   `file_type` varchar(10) NOT NULL,
   `name_es` varchar(100) NOT NULL,
@@ -16,4 +18,4 @@ CREATE TABLE `doplanning_app`.`app_file_types_conversion` (
   PRIMARY KEY  USING BTREE (`file_type_from`,`file_type_to`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `doplanning_app`.`app_file_types_conversion` VALUES ('.doc','.html',4,1),('.doc','.odt',3,0),('.doc','.pdf',1,1),('.doc','.rtf',2,0),('.odt','.doc',1,1),('.odt','.html',4,1),('.odt','.pdf',2,1),('.odt','.rtf',3,1),('.ppt','.html',3,1),('.ppt','.pdf',1,1),('.ppt','.swf',2,0),('.xls','.html',2,1),('.xls','.pdf',1,1);
+INSERT INTO `app_file_types_conversion` VALUES ('.csv','.html',2,1),('.csv','.pdf',1,1),('.doc','.html',4,1),('.doc','.odt',3,0),('.doc','.pdf',1,1),('.doc','.rtf',2,0),('.docx','.pdf',1,1),('.odp','.html',2,1),('.odp','.pdf',1,1),('.odt','.doc',1,1),('.odt','.html',4,1),('.odt','.pdf',2,1),('.odt','.rtf',3,1),('.ppt','.html',3,1),('.ppt','.pdf',1,1),('.ppt','.swf',2,0),('.pptx','.html',2,1),('.pptx','.pdf',1,1),('.xls','.html',2,1),('.xls','.pdf',1,1),('.xlsx','.html',2,1),('.xlsx','.pdf',1,1);
