@@ -1,4 +1,4 @@
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.0/isotope.pkgd.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.2/isotope.pkgd.min.js"></script>
 
 <cfoutput>
 <script>
@@ -99,7 +99,7 @@ $( document ).ready( function() {
 	    transitionDuration: 0 <!--- en iPad las transiciones dan problemas https://github.com/metafizzy/isotope/issues/502--->
 	  });
 
-	});	
+	});
 
   <cfif isDefined("URL.filter")>
 
