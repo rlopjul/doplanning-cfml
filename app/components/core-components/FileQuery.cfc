@@ -88,9 +88,6 @@
 				FROM #client_abb#_#fileTypeTable# AS files
 				LEFT JOIN #client_abb#_users AS users
 				ON files.user_in_charge = users.id
-				<cfif arguments.ignore_status IS false>
-					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
-				</cfif>
 				LEFT JOIN #client_abb#_users AS users_replacement
 				ON files.replacement_user = users_replacement.id
 				LEFT JOIN #client_abb#_users AS users_reviser
@@ -135,6 +132,9 @@
 					files.url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
 				<cfelse>
 					files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif arguments.ignore_status IS false>
+					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				;
 			</cfquery>
