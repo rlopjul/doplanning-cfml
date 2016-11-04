@@ -91,11 +91,15 @@ $( document ).ready( function() {
 
   <!--- init Isotope --->
 
-  $itemsContainer = $('.elements_container').isotope({
-    itemSelector: '.element_item',
-    layoutMode: 'vertical',
-    transitionDuration: 0 <!--- en iPad las transiciones dan problemas https://github.com/metafizzy/isotope/issues/502---> 
-  });
+  $itemsContainer = $('.elements_container').imagesLoaded( function() {
+
+		$itemsContainer.isotope({
+	    itemSelector: '.element_item',
+	    layoutMode: 'vertical',
+	    transitionDuration: 0 <!--- en iPad las transiciones dan problemas https://github.com/metafizzy/isotope/issues/502--->
+	  });
+
+	});	
 
   <cfif isDefined("URL.filter")>
 
