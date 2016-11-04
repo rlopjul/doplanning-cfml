@@ -88,9 +88,6 @@
 				FROM #client_abb#_#fileTypeTable# AS files
 				LEFT JOIN #client_abb#_users AS users
 				ON files.user_in_charge = users.id
-				<cfif arguments.ignore_status IS false>
-					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
-				</cfif>
 				LEFT JOIN #client_abb#_users AS users_replacement
 				ON files.replacement_user = users_replacement.id
 				LEFT JOIN #client_abb#_users AS users_reviser
@@ -135,6 +132,9 @@
 					files.url_id = <cfqueryparam value="#arguments.url_id#" cfsqltype="cf_sql_varchar">
 				<cfelse>
 					files.id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				</cfif>
+				<cfif arguments.ignore_status IS false>
+					AND status = <cfqueryparam value="#arguments.status#" cfsqltype="cf_sql_varchar">
 				</cfif>
 				;
 			</cfquery>
@@ -777,7 +777,7 @@
 	<!---Aquí se obtienen los tipos a los que se puede convertir un archivo--->
 
 	<cffunction name="getFileTypesConversion" access="public" returntype="query">
-		<cfargument name="file_type" type="string" required="yes">
+		<cfargument name="file_type" type="string" required="true">
 
 		<cfset var method = "getFileTypesConversion">
 
@@ -796,5 +796,31 @@
 
 	</cffunction>
 
+
+	<!----getFilesConverted--->
+
+	<cffunction name="getFilesConverted" access="public" returntype="query">
+		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="file_type" type="string" required="false">
+
+		<cfargument name="client_abb" type="string" required="true">
+		<cfargument name="client_dsn" type="string" required="true">
+
+		<cfset var method = "getFilesConverted">
+
+		<cfset var getFilesConvertedQuery = "">
+
+			<cfquery datasource="#client_dsn#" name="getFilesConvertedQuery">
+				SELECT file_id, file_type, uploading_date, conversion_date
+				FROM #client_abb#_files_converted
+				WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">
+				<cfif isDefined("arguments.file_type")>
+					AND file_type = <cfqueryparam value="#arguments.file_type#" cfsqltype="cf_sql_varchar">
+				</cfif>;
+			</cfquery>
+
+		<cfreturn getFilesConvertedQuery>
+
+	</cffunction>
 
 </cfcomponent>

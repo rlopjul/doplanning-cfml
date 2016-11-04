@@ -8,6 +8,8 @@
 	<cfset fileItemTypeId = 10>
 	<cfset typologyTableTypeId = 3>
 
+	<cfset filesConvertedDirectory = "files_converted">
+
 	<!--- ----------------------- trasnformFileSize -------------------------------- --->
 
 	<cffunction name="trasnformFileSize" returntype="string" output="false" access="public">
@@ -81,8 +83,10 @@
 		<cfset var fileTypeId = "">
 		<cfset var path = "">
 		<cfset var filePath ="">
+		<cfset var thumbnailFilePath = "">
 		<cfset var isApproved = "">
 		<cfset var itemCategories = "">
+
 
 
 			<cfif NOT isDefined("arguments.fileQuery")>
@@ -241,6 +245,19 @@
 						WHERE file_id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
 
+					<cfif fileQuery.file_type_id IS NOT 3 AND APPLICATION.moduleConvertFiles IS true>
+
+						<!--- Get converted files before delete file --->
+
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesConverted" returnvariable="filesConvertedQuery">
+							<cfinvokeargument name="file_id" value="#fileQuery.file_id#">
+
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+					</cfif>
+
 					<!--- Deletion of the row representing the file --->
 					<cfquery name="deleteFileQuery" datasource="#client_dsn#">
 						DELETE
@@ -259,6 +276,45 @@
 						<cfelse><!---The physical file does not exist--->
 							<!---<cfset error_code = 608>
 							<cfthrow errorcode="#error_code#">--->
+						</cfif>
+
+						<cfif APPLICATION.moduleConvertFiles IS true>
+
+							<cfset convertedFilesPath = "#APPLICATION.filesPath#/#client_abb#/#filesConvertedDirectory#/#fileQuery.id#">
+
+							<!--- Delete converted files ---->
+
+							<cfloop query="#filesConvertedQuery#">
+
+								<cfif filesConvertedQuery.file_type EQ ".html">
+
+									<cfset convertedFilePath = ExpandPath("#APPLICATION.path#/#client_abb#/temp/files/#fileQuery.id#_html/")>
+										
+									<cfif DirectoryExists(convertedFilePath)>
+										<cfset DirectoryDelete(convertedFilePath, true)>
+									</cfif>
+
+								<cfelse>
+
+									<cfset convertedFilePath = convertedFilesPath&filesConvertedQuery.file_type>
+
+									<cfif FileExists(convertedFilePath)>
+										<cffile action="delete" file="#convertedFilePath#">
+									</cfif>
+
+								</cfif>
+
+							</cfloop>
+
+						</cfif>
+
+
+						<!--- Delete thumbnail --->
+						<cfif fileQuery.thumbnail IS true>
+							<cfset thumbnailFilePath = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#_thumbnails/#fileQuery.id#'>
+							<cfif FileExists(thumbnailFilePath)>
+								<cffile action="delete" file="#thumbnailFilePath#">
+							</cfif>
 						</cfif>
 
 						<!---Update User Space Used--->
@@ -766,7 +822,6 @@
 		<cfset var method = "convertFile">
 
 		<cfset var files_directory = "">
-		<cfset var files_converted_directory = "">
 		<cfset var file_copy = "">
 		<cfset var file_converted = "">
 
@@ -782,7 +837,6 @@
 				<cfinclude template="#APPLICATION.corePath#/includes/fileTypeSwitch.cfm">
 
 				<cfset files_directory = fileTypeDirectory>
-				<cfset files_converted_directory = "files_converted">
 
 				<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#fileQuery.physical_name#'>
 
@@ -790,23 +844,24 @@
 
 					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="120">
 
-						<cfquery datasource="#client_dsn#" name="getFileConverted">
-							SELECT file_id, file_type, uploading_date, conversion_date
-							FROM #client_abb#_files_converted
-							WHERE file_id = <cfqueryparam value="#fileQuery.file_id#" cfsqltype="cf_sql_integer">
-							AND file_type = <cfqueryparam value="#file_type#" cfsqltype="cf_sql_varchar">;
-						</cfquery>
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesConverted" returnvariable="getFilesConvertedQuery">
+							<cfinvokeargument name="file_id" value="#fileQuery.file_id#">
+							<cfinvokeargument name="file_type" value="#file_type#">
 
-						<cfif getFileConverted.recordCount LT 1 OR getFileConverted.uploading_date LT fileQuery.uploading_date OR getFileConverted.uploading_date LT fileQuery.replacement_date>
+							<cfinvokeargument name="client_abb" value="#client_abb#">
+							<cfinvokeargument name="client_dsn" value="#client_dsn#">
+						</cfinvoke>
+
+						<cfif getFilesConvertedQuery.recordCount LT 1 OR getFilesConvertedQuery.uploading_date LT fileQuery.uploading_date OR getFilesConvertedQuery.uploading_date LT fileQuery.replacement_date>
 
 							<cfsetting requesttimeout="#APPLICATION.filesTimeout#">
 
-							<cfset file_copy = '#APPLICATION.filesPath#/#client_abb#/#files_converted_directory#/temp_#fileQuery.physical_name#_#CreateUUID()##fileQuery.file_type#'>
+							<cfset file_copy = '#APPLICATION.filesPath#/#client_abb#/#filesConvertedDirectory#/temp_#fileQuery.physical_name#_#CreateUUID()##fileQuery.file_type#'>
 							<cffile action="copy" source="#source#" destination="#file_copy#" nameconflict="overwrite">
 
 							<cfif file_type NEQ ".html">
 
-								<cfset file_converted = '#APPLICATION.filesPath#/#client_abb#/#files_converted_directory#/#fileQuery.physical_name##file_type#'>
+								<cfset file_converted = '#APPLICATION.filesPath#/#client_abb#/#filesConvertedDirectory#/#fileQuery.physical_name##file_type#'>
 
 							<cfelse>
 

@@ -3615,7 +3615,7 @@
 
 										<cfif len(itemsQuery.thumbnail_format) GT 0>
 										  <div class="media-left">
-												<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1" alt="Thumbnail" class="media-object"/>
+												<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#itemsQuery.id#&thumbnail=1<cfif arguments.deletedItems IS true>&bin=true</cfif>" alt="Thumbnail" class="media-object"/>
 										  </div>
 										</cfif>
 
