@@ -1932,290 +1932,306 @@
 
 						</cfif>
 
-						<cfif ( itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 ) AND objectItem.general IS true>
-							<div class="row">
-								<div class="col-xs-12">
-									<h6><span class="label label-info" lang="es">#itemTypeStruct.label# global</span></h6>
 
-									<cfif itemTypeId IS 13 OR ( (itemTypeId IS 11 OR itemTypeId IS 12) AND objectItem.general IS true )><!--- Lists, Forms AND Typologies --->
+						<div class="media">
 
-										<cfif isDefined("arguments.internal_user")>
+							<cfif len(objectItem.attached_file_thumbnail_format) GT 0>
+								<div class="media-left">
+									<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&thumbnail=1" alt="Thumbnail" class="media-object img-thumbnail"/>
+								</div>
+							</cfif>
 
-											<div class="div_message_page_label">
+							<div class="media-body">
 
-											<cfset table_area_allowed = false>
 
-											<cfif arguments.internal_user IS false>
+								<cfif ( itemTypeId IS 11 OR itemTypeId IS 12 OR itemTypeId IS 13 ) AND objectItem.general IS true>
+									<div class="row">
+										<div class="col-xs-12">
+											<h6><span class="label label-info" lang="es">#itemTypeStruct.label# global</span></h6>
 
-												<!---area_allowed--->
-												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="table_area_allowed">
-													<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-												</cfinvoke>
+											<cfif itemTypeId IS 13 OR ( (itemTypeId IS 11 OR itemTypeId IS 12) AND objectItem.general IS true )><!--- Lists, Forms AND Typologies --->
 
-											</cfif>
+												<cfif isDefined("arguments.internal_user")>
 
-											<cfif arguments.internal_user IS true OR table_area_allowed>
+													<div class="div_message_page_label">
 
-												<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
-													<cfinvokeargument name="area_id" value="#objectItem.area_id#">
-												</cfinvoke>
+													<cfset table_area_allowed = false>
 
-												<span lang="es">Propiedad del área:</span>
-												<cfif itemTypeId IS 13>
-													<a href="typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#">#tableArea.name#</a>
-												<cfelse>
-													<a href="area_items.cfm?area=#objectItem.area_id####itemTypeName##objectItem.id#">#tableArea.name#</a>
+													<cfif arguments.internal_user IS false>
+
+														<!---area_allowed--->
+														<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="canUserAccessToArea" returnvariable="table_area_allowed">
+															<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+														</cfinvoke>
+
+													</cfif>
+
+													<cfif arguments.internal_user IS true OR table_area_allowed>
+
+														<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="tableArea">
+															<cfinvokeargument name="area_id" value="#objectItem.area_id#">
+														</cfinvoke>
+
+														<span lang="es">Propiedad del área:</span>
+														<cfif itemTypeId IS 13>
+															<a href="typologies.cfm?area=#objectItem.area_id#&#itemTypeName#=#objectItem.id#">#tableArea.name#</a>
+														<cfelse>
+															<a href="area_items.cfm?area=#objectItem.area_id####itemTypeName##objectItem.id#">#tableArea.name#</a>
+														</cfif>
+
+													</cfif>
+
+													</div>
+
 												</cfif>
 
 											</cfif>
 
+										</div>
+									</div>
+								</cfif>
+
+								<cfif isDefined("arguments.categories")>
+
+									<cfif arguments.categories.recordCount GT 0>
+
+										<div class="row">
+
+											<div class="col-xs-12">
+
+												<div class="div_message_page_label"><span lang="es">Categorías</span>:
+
+												<cfloop query="#categories#">
+
+													<span class="label label-default">#categories.category_name#</span>
+
+												</cfloop>
+
+												</div>
+
 											</div>
+
+										</div>
+
+									</cfif>
+
+								</cfif>
+
+								<div class="clearfix">
+
+									<cfif isNumeric(objectItem.attached_file_id)><!--- Attached file --->
+
+										<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+											<cfinvokeargument name="file_name" value="#objectItem.attached_file_name#"/>
+										</cfinvoke>
+
+										<div><!---<span lang="es">Archivo:</span>---><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"> <i class="#attached_file_icon#"></i>  #objectItem.attached_file_name#</a></div>
+
+									</cfif>
+
+									<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id)><!--- Attached image --->
+
+										<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_image_icon">
+											<cfinvokeargument name="file_name" value="#objectItem.attached_image_name#"/>
+										</cfinvoke>
+
+										<div><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"><i class="#attached_image_icon#"></i> #objectItem.attached_image_name#</a></div>
+									</cfif>
+
+
+									<cfif len(objectItem.link) GT 0>
+
+										<div><cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", objectItem.link) GT 0>
+
+											<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
+												<cfinvokeargument name="file_name" value="#objectItem.link#"/>
+											</cfinvoke>
+
+											<a href="#objectItem.link#" target="_blank" class="link_attached" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="#attached_file_icon#"></i>
+											#listLast(objectItem.link, "=")#</a>
+
+										<cfelse>
+
+											<a href="#objectItem.link#" target="_blank" class="link_external"><i class="icon-link"></i> #objectItem.link#</a>
+
+										</cfif></div>
+
+
+									</cfif>
+
+									<cfif itemTypeId IS 8 AND len(objectItem.identifier) GT 0 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
+										<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&objectItem.identifier>
+										<div> <span class="text_message_page"><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a></span></div>
+									</cfif>
+
+									<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
+										<div><span lang="es">URL contenido incrustado:</span><br/> <a href="#objectItem.iframe_url#" target="_blank">#objectItem.iframe_url#</a></div>
+									</cfif>
+
+									<cfif NOT isDefined("objectItem.last_update_user_id") OR NOT isNumeric(objectItem.last_update_user_id)>
+
+										<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>
+											<cfif len(objectItem.last_update_date) GT 0>
+											<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
+											</cfif>
+										</cfif>
+
+									</cfif>
+
+
+									<cfif itemTypeId IS 6><!---Tasks--->
+										<div class="div_message_page_label"><span lang="es">Asignada a:</span>
+
+										<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.recipient_user#"><cfif len(objectItem.recipient_user_image_type) GT 0>
+											<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.recipient_user#&type=#objectItem.recipient_user_image_type#&small=" alt="#objectItem.recipient_user_full_name#" class="item_img"/>
+										<cfelse>
+											<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectItem.recipient_user_full_name#" class="item_img_default" />
+										</cfif></a>
+
+										<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.recipient_user#">#objectItem.recipient_user_full_name#</a></div>
+									</cfif>
+
+									<cfif APPLICATION.moduleWeb IS true AND itemTypeId NEQ 13 AND ( len(area_type) GT 0 OR itemTypeId IS 11 OR itemTypeId IS 12 )><!--- WEB --->
+										<!--- Debe poder mostrarse el estado de publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
+
+										<cfif len(objectItem.publication_date) GT 0>
+											<div class="div_message_page_label"><span lang="es">Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
+												<!---<span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.publication_time,"HH:mm")#</span>--->
+											</div>
+										</cfif>
+										<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
+											<div class="div_message_page_label"><span lang="es">Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
+											</div>
+										</cfif>
+										<cfif APPLICATION.publicationRestricted IS true AND len(objectItem.publication_restricted) GT 0>
+											<div class="div_message_page_label"><span lang="es">Publicación visible sólo para usuarios identificados:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_restricted IS true>Sí<cfelse><b>No</b></cfif></span>
+											</div>
+										</cfif>
+
+									</cfif>
+
+									<cfif itemTypeId IS 7><!---Consultation--->
+
+										<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
+											<cfcase value="created">Enviada</cfcase>
+											<cfcase value="read">Leída</cfcase>
+											<cfcase value="answered">Respondida</cfcase>
+											<cfcase value="closed"><strong lang="es">Cerrada</strong></cfcase>
+										</cfswitch></span></div>
+
+										<cfif objectItem.state NEQ "read">
+											<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#"><cfcase value="created">envío</cfcase>
+												<cfcase value="read">lectura</cfcase>
+												<cfcase value="answered">respuesta</cfcase>
+												<cfcase value="closed">cierre</cfcase>
+											</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
+										</cfif>
+
+									<cfelseif itemTypeId IS 17><!--- Mailing --->
+
+										<div class="div_message_page_label"><span lang="es">Estado:</span> <cfswitch expression="#objectItem.state#">
+											<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
+											<cfcase value="modified"><span class="label label-default" lang="es">Modificado</span></cfcase>
+											<cfcase value="sent_to_test"><span class="label label-default" lang="es">Enviado a destinatarios para pruebas</span></cfcase>
+											<cfcase value="sent"><span class="label label-success" lang="es">Enviado</span></cfcase>
+										</cfswitch></div>
+
+										<cfif objectItem.state NEQ "created" AND objectItem.state NEQ "modified">
+											<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#">
+												<cfcase value="sent_to_test">envío para pruebas</cfcase>
+												<cfcase value="sent">envío</cfcase>
+											</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
+										</cfif>
+
+									</cfif>
+
+									<!---<div class="div_message_page_date"></div>--->
+									<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
+										<div class="div_message_page_label"><span lang="es">Fecha de inicio<cfif itemTypeId IS 5> del evento</cfif>:</span> <span class="text_message_page">#<!---DateFormat(--->objectItem.start_date<!---,APPLICATION.dateFormat)--->#</span>
+									<cfif itemTypeId IS 5><span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.start_time,"HH:mm")#</span></cfif>
+										</div>
+										<div class="div_message_page_label"><span lang="es">Fecha de fin<cfif itemTypeId IS 5> del evento</cfif>:</span> <span class="text_message_page">#<!---DateFormat(--->objectItem.end_date<!---,APPLICATION.dateFormat)--->#</span>
+									<cfif itemTypeId IS 5><span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.end_time,"HH:mm")#</span></cfif>
+										</div>
+
+										<cfif itemTypeId IS 5><!---Events--->
+										<div class="div_message_page_label"><span lang="es">Lugar:</span> <span class="text_message_page">#objectItem.place#</span></div>
+										<cfelse><!---Tasks--->
+										<div class="div_message_page_label"><span lang="es">Valor estimado:</span> <span class="text_message_page">#objectItem.estimated_value#</span></div>
+										<div class="div_message_page_label"><span lang="es">Valor real:</span> <span class="text_message_page">#objectItem.real_value#</span></div>
+										<div class="div_message_page_label"><span lang="es">Realizada:</span> <span class="text_message_page" lang="es"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span></div>
+										</cfif>
+
+									</cfif>
+
+									<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications --->
+
+										<cfif itemTypeId IS 8 AND isNumeric(objectItem.sub_type_id)>
+											<cfif subTypeQuery.recordCount GT 0>
+												<div class="div_message_page_label"><span lang="es">Tipo:</span> <span class="text_message_page" lang="es">#subTypeQuery.sub_type_title_es#</span></div>
+											</cfif>
+										</cfif>
+
+										<cfif len(objectItem.identifier) GT 0>
+										<div class="div_message_page_label"><span lang="es">Identificador:</span> <span class="text_message_page">#objectItem.identifier#</span></div>
+										</cfif>
+
+										<cfif itemTypeId IS 8 AND ( subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1 )>
+
+											<div class="div_message_page_label"><span lang="es">Valor:</span> <span class="text_message_page">#objectItem.price#</span></div>
 
 										</cfif>
 
 									</cfif>
 
-								</div>
-							</div>
-						</cfif>
-
-						<cfif isDefined("arguments.categories")>
-
-							<cfif arguments.categories.recordCount GT 0>
-
-								<div class="row">
-
-									<div class="col-xs-12">
-
-										<div class="div_message_page_label"><span lang="es">Categorías</span>:
-
-										<cfloop query="#categories#">
-
-											<span class="label label-default">#categories.category_name#</span>
-
-										</cfloop>
-
-										</div>
-
-									</div>
-
-								</div>
-
-							</cfif>
-
-						</cfif>
-
-						<div class="clearfix">
-
-							<cfif isNumeric(objectItem.attached_file_id)><!--- Attached file --->
-
-								<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
-									<cfinvokeargument name="file_name" value="#objectItem.attached_file_name#"/>
-								</cfinvoke>
-
-								<div><!---<span lang="es">Archivo:</span>---><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"> <i class="#attached_file_icon#"></i>  #objectItem.attached_file_name#</a></div>
-
-							</cfif>
-
-							<cfif arguments.itemTypeId IS NOT 1 AND isNumeric(objectItem.attached_image_id)><!--- Attached image --->
-
-								<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_image_icon">
-									<cfinvokeargument name="file_name" value="#objectItem.attached_image_name#"/>
-								</cfinvoke>
-
-								<div><a href="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#" onclick="return downloadFileLinked(this,event)" class="link_attached"><i class="#attached_image_icon#"></i> #objectItem.attached_image_name#</a></div>
-							</cfif>
-
-
-							<cfif len(objectItem.link) GT 0>
-
-								<div><cfif SESSION.client_abb EQ "omars" AND find("/html/download_gtrabajo.cfm?area=", objectItem.link) GT 0>
-
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/File" method="getFileIcon" returnvariable="attached_file_icon">
-										<cfinvokeargument name="file_name" value="#objectItem.link#"/>
-									</cfinvoke>
-
-									<a href="#objectItem.link#" target="_blank" class="link_attached" onclick="return downloadFileLinked(this,event)" title="Descargar"><i class="#attached_file_icon#"></i>
-									#listLast(objectItem.link, "=")#</a>
-
-								<cfelse>
-
-									<a href="#objectItem.link#" target="_blank" class="link_external"><i class="icon-link"></i> #objectItem.link#</a>
-
-								</cfif></div>
-
-
-							</cfif>
-
-							<cfif itemTypeId IS 8 AND len(objectItem.identifier) GT 0 AND isNumeric(objectItem.sub_type_id) AND subTypeQuery.recordCount GT 0 AND subTypeQuery.sub_type_id IS 1>
-								<cfset pubMedUrl = "http://www.ncbi.nlm.nih.gov/pubmed/"&objectItem.identifier>
-								<div> <span class="text_message_page"><a href="#pubMedUrl#" target="_blank" class="link_external"><i class="icon-external-link-sign"></i> #pubMedUrl#</a></span></div>
-							</cfif>
-
-							<cfif isDefined("objectItem.iframe_url") AND len(objectItem.iframe_url) GT 0>
-								<div><span lang="es">URL contenido incrustado:</span><br/> <a href="#objectItem.iframe_url#" target="_blank">#objectItem.iframe_url#</a></div>
-							</cfif>
-
-							<cfif NOT isDefined("objectItem.last_update_user_id") OR NOT isNumeric(objectItem.last_update_user_id)>
-
-								<cfif itemTypeId IS NOT 1 AND itemTypeId IS NOT 7>
-									<cfif len(objectItem.last_update_date) GT 0>
-									<div class="div_message_page_label"><span lang="es">Fecha de última modificación:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
+									<cfif itemTypeId IS 5><!---Events--->
+										<div class="div_message_page_label"><span lang="es">Valor:</span> <span class="text_message_page">#objectItem.price#</span></div>
 									</cfif>
-								</cfif>
-
-							</cfif>
 
 
-							<cfif itemTypeId IS 6><!---Tasks--->
-								<div class="div_message_page_label"><span lang="es">Asignada a:</span>
-
-								<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.recipient_user#"><cfif len(objectItem.recipient_user_image_type) GT 0>
-									<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectItem.recipient_user#&type=#objectItem.recipient_user_image_type#&small=" alt="#objectItem.recipient_user_full_name#" class="item_img"/>
-								<cfelse>
-									<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectItem.recipient_user_full_name#" class="item_img_default" />
-								</cfif></a>
-
-								<a href="area_user.cfm?area=#objectItem.area_id#&user=#objectItem.recipient_user#">#objectItem.recipient_user_full_name#</a></div>
-							</cfif>
-
-							<cfif APPLICATION.moduleWeb IS true AND itemTypeId NEQ 13 AND ( len(area_type) GT 0 OR itemTypeId IS 11 OR itemTypeId IS 12 )><!--- WEB --->
-								<!--- Debe poder mostrarse el estado de publicación en las listas y formularios aunque no estén en áreas web para poder publicar sus vistas en áreas web --->
-
-								<cfif len(objectItem.publication_date) GT 0>
-									<div class="div_message_page_label"><span lang="es">Fecha de publicación:</span> <span class="text_message_page">#objectItem.publication_date#</span>
-										<!---<span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.publication_time,"HH:mm")#</span>--->
-									</div>
-								</cfif>
-								<cfif APPLICATION.publicationValidation IS true AND len(objectItem.publication_validated) GT 0>
-									<div class="div_message_page_label"><span lang="es">Publicación aprobada:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_validated IS true>Sí<cfelse><b>No</b></cfif></span>
-									</div>
-								</cfif>
-								<cfif APPLICATION.publicationRestricted IS true AND len(objectItem.publication_restricted) GT 0>
-									<div class="div_message_page_label"><span lang="es">Publicación visible sólo para usuarios identificados:</span> <span class="text_message_page" lang="es"><cfif objectItem.publication_restricted IS true>Sí<cfelse><b>No</b></cfif></span>
-									</div>
-								</cfif>
-
-							</cfif>
-
-							<cfif itemTypeId IS 7><!---Consultation--->
-
-								<div class="div_message_page_label"><span lang="es">Estado:</span> <span class="text_message_page" lang="es"><cfswitch expression="#objectItem.state#">
-									<cfcase value="created">Enviada</cfcase>
-									<cfcase value="read">Leída</cfcase>
-									<cfcase value="answered">Respondida</cfcase>
-									<cfcase value="closed"><strong lang="es">Cerrada</strong></cfcase>
-								</cfswitch></span></div>
-
-								<cfif objectItem.state NEQ "read">
-									<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#"><cfcase value="created">envío</cfcase>
-										<cfcase value="read">lectura</cfcase>
-										<cfcase value="answered">respuesta</cfcase>
-										<cfcase value="closed">cierre</cfcase>
-									</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
-								</cfif>
-
-							<cfelseif itemTypeId IS 17><!--- Mailing --->
-
-								<div class="div_message_page_label"><span lang="es">Estado:</span> <cfswitch expression="#objectItem.state#">
-									<cfcase value="created"><span class="label label-default" lang="es">Creado</span></cfcase>
-									<cfcase value="modified"><span class="label label-default" lang="es">Modificado</span></cfcase>
-									<cfcase value="sent_to_test"><span class="label label-default" lang="es">Enviado a destinatarios para pruebas</span></cfcase>
-									<cfcase value="sent"><span class="label label-success" lang="es">Enviado</span></cfcase>
-								</cfswitch></div>
-
-								<cfif objectItem.state NEQ "created" AND objectItem.state NEQ "modified">
-									<div class="div_message_page_label"><span lang="es">Fecha de <cfswitch expression="#objectItem.state#">
-										<cfcase value="sent_to_test">envío para pruebas</cfcase>
-										<cfcase value="sent">envío</cfcase>
-									</cfswitch>:</span> <span class="text_message_page">#objectItem.last_update_date#</span></div>
-								</cfif>
-
-							</cfif>
-
-							<!---<div class="div_message_page_date"></div>--->
-							<cfif itemTypeId IS 5 OR itemTypeId IS 6><!---Events, Tasks--->
-								<div class="div_message_page_label"><span lang="es">Fecha de inicio<cfif itemTypeId IS 5> del evento</cfif>:</span> <span class="text_message_page">#<!---DateFormat(--->objectItem.start_date<!---,APPLICATION.dateFormat)--->#</span>
-							<cfif itemTypeId IS 5><span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.start_time,"HH:mm")#</span></cfif>
-								</div>
-								<div class="div_message_page_label"><span lang="es">Fecha de fin<cfif itemTypeId IS 5> del evento</cfif>:</span> <span class="text_message_page">#<!---DateFormat(--->objectItem.end_date<!---,APPLICATION.dateFormat)--->#</span>
-							<cfif itemTypeId IS 5><span lang="es">Hora:</span> <span class="text_message_page">#TimeFormat(objectItem.end_time,"HH:mm")#</span></cfif>
-								</div>
-
-								<cfif itemTypeId IS 5><!---Events--->
-								<div class="div_message_page_label"><span lang="es">Lugar:</span> <span class="text_message_page">#objectItem.place#</span></div>
-								<cfelse><!---Tasks--->
-								<div class="div_message_page_label"><span lang="es">Valor estimado:</span> <span class="text_message_page">#objectItem.estimated_value#</span></div>
-								<div class="div_message_page_label"><span lang="es">Valor real:</span> <span class="text_message_page">#objectItem.real_value#</span></div>
-								<div class="div_message_page_label"><span lang="es">Realizada:</span> <span class="text_message_page" lang="es"><cfif objectItem.done IS true>Sí<cfelse>No</cfif></span></div>
-								</cfif>
-
-							</cfif>
-
-							<cfif itemTypeId IS 7 OR itemTypeId IS 8><!---Consultations, Publications --->
-
-								<cfif itemTypeId IS 8 AND isNumeric(objectItem.sub_type_id)>
-									<cfif subTypeQuery.recordCount GT 0>
-										<div class="div_message_page_label"><span lang="es">Tipo:</span> <span class="text_message_page" lang="es">#subTypeQuery.sub_type_title_es#</span></div>
+									<cfif APPLICATION.publicationScope IS true AND ( itemTypeId IS 11 OR itemTypeId IS 12 )>
+										<div class="div_message_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
 									</cfif>
+
+
+								</div><!--- END div class clearfix --->
+
+
+								<cfif itemTypeId NEQ 1 OR isNumeric(objectItem.attached_file_id) OR len(objectItem.link) GT 0>
+									<!---<hr>--->
 								</cfif>
 
-								<cfif len(objectItem.identifier) GT 0>
-								<div class="div_message_page_label"><span lang="es">Identificador:</span> <span class="text_message_page">#objectItem.identifier#</span></div>
-								</cfif>
-
-								<cfif itemTypeId IS 8 AND ( subTypeQuery.recordCount IS 0 OR subTypeQuery.sub_type_id NEQ 1 )>
-
-									<div class="div_message_page_label"><span lang="es">Valor:</span> <span class="text_message_page">#objectItem.price#</span></div>
-
-								</cfif>
-
-							</cfif>
-
-							<cfif itemTypeId IS 5><!---Events--->
-								<div class="div_message_page_label"><span lang="es">Valor:</span> <span class="text_message_page">#objectItem.price#</span></div>
-							</cfif>
 
 
-							<cfif APPLICATION.publicationScope IS true AND ( itemTypeId IS 11 OR itemTypeId IS 12 )>
-								<div class="div_message_page_label"><span lang="es">Ámbito de publicación:</span> <span class="text_message_page">#objectItem.publication_scope_name#</span></div>
-							</cfif>
+								<cfif itemTypeId IS 17><!--- Mailing --->
 
+									<div style="padding-top:10px">
 
-						</div><!--- END div class clearfix --->
+										<textarea name="description" id="description" style="height:500px;" readonly="readonly">
+											#objectItem.head_content#
 
+											<div style="#objectItem.content_styles#">
+												#objectItem.description#
+											</div>
 
-						<cfif itemTypeId NEQ 1 OR isNumeric(objectItem.attached_file_id) OR len(objectItem.link) GT 0>
-							<!---<hr>--->
-						</cfif>
+											#objectItem.foot_content#
+										</textarea>
 
+									</div>
 
-
-						<cfif itemTypeId IS 17><!--- Mailing --->
-
-							<div style="padding-top:10px">
-
-								<textarea name="description" id="description" style="height:500px;" readonly="readonly">
-									#objectItem.head_content#
-
-									<div style="#objectItem.content_styles#">
+								<cfelseif itemTypeId IS 20><!--- DP Document --->
+									<div class="div_message_page_description" style="margin-top:10px">
 										#objectItem.description#
 									</div>
+								<cfelse>
+									<div class="lead div_message_page_description">
+										#objectItem.description#
+									</div>
+								</cfif>
 
-									#objectItem.foot_content#
-								</textarea>
 
-							</div>
-
-						<cfelseif itemTypeId IS 20><!--- DP Document --->
-							<div class="div_message_page_description" style="margin-top:10px">
-								#objectItem.description#
-							</div>
-						<cfelse>
-							<div class="lead div_message_page_description">
-								#objectItem.description#
-							</div>
-						</cfif>
+							</div><!--- END media-body --->
+						</div><!--- END media --->
 
 
 
