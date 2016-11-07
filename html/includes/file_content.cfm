@@ -165,7 +165,7 @@
 
 					<div class="media">
 
-						<cfif len(objectFile.thumbnail_format) GT 0>
+						<cfif len(objectFile.thumbnail_format) GT 0 OR objectFile.file_type EQ ".pdf">
 							<div class="media-left">
 
 								<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectFile.id#&thumbnail=1<cfif objectFile.status EQ 'deleted'>&bin=true</cfif>" alt="Thumbnail" class="media-object img-thumbnail"/>
