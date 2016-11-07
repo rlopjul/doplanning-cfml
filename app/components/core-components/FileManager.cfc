@@ -709,6 +709,7 @@
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnailFromPdf" returnvariable="generateThumbnailResult">
 						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="physical_name" value="#fileQuery.physical_name#">
 						<cfinvokeargument name="sourceFile" value="#sourceFile#">
 						<cfinvokeargument name="destinationPath"	value="#destinationThumbnail#">
 
@@ -763,6 +764,7 @@
 
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnailFromPdf" returnvariable="generateThumbnailResult">
 								<cfinvokeargument name="file_id" value="#arguments.file_id#">
+								<cfinvokeargument name="physical_name" value="#fileQuery.physical_name#">
 								<cfinvokeargument name="sourceFile" value="#convertFileResponse.file_converted_path#">
 								<cfinvokeargument name="destinationPath"	value="#destinationThumbnail#">
 
@@ -799,6 +801,7 @@
 
 	<cffunction name="generateThumbnailFromPdf" returntype="void" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="physical_name" type="string" required="true">	
 		<cfargument name="sourceFile" type="string" required="true">
 		<cfargument name="destinationPath" type="string" required="true">
 
@@ -809,7 +812,7 @@
 
 		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#" overwrite="true">
 
-		<cffile action="rename" source="#arguments.destinationPath##arguments.file_id#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#" nameconflict="overwrite">
+		<cffile action="rename" source="#arguments.destinationPath##arguments.physical_name#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#" nameconflict="overwrite">
 
 		<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
 			UPDATE #client_abb#_files
