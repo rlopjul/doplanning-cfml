@@ -26,7 +26,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/tableTypeSwitch.cfm">
 
 			<cfquery name="selectTableQuery" datasource="#client_dsn#">
-				SELECT tables.id, tables.id AS table_id, tables.user_in_charge, tables.title, tables.description, tables.attached_file_id, tables.attached_file_name, tables.area_id, tables.link,
+				SELECT tables.id, tables.id AS table_id, tables.user_in_charge, tables.title, tables.description, tables.attached_file_id, tables.attached_file_name, NULL AS attached_file_thumbnail, NULL AS attached_file_thumbnail_format, tables.area_id, tables.link,
 				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				, tables.attached_image_id, tables.attached_image_name
 				, tables.link_target
