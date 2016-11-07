@@ -11,18 +11,6 @@ file_type
 
 <cfset fileInfo = getFileInfo(source)>
 
-<!---
-Esto no funciona en Railo con Tomcat
-<cfset mimeType = getPageContext().getServletContext().getMimeType(source)>--->
-
-<!---
-Esto quitado porque por ahora no se puede usar gzip para esta aplicación
-<cfif CGI.HTTP_ACCEPT_ENCODING CONTAINS "gzip">
-	<cfheader name="Content-Encoding" value="gzip">
-</cfif>--->
-
-<!---<cfheader name="Expires" value="#GetHttpTimeString(DateAdd('m', 1, Now()))#">--->
-
 <!---Para poder cargar un swf desde otra página o swf hay que quitar esto--->
 <cfif ( NOT isDefined("URL.open") OR URL.open EQ 0 ) AND (NOT isDefined("thumb") OR thumb IS false)>
 	<cfheader name="Content-Disposition" value="attachment; filename=""#filename#""" charset="UTF-8">
@@ -30,7 +18,6 @@ Esto quitado porque por ahora no se puede usar gzip para esta aplicación
 	<cfheader name="Content-Disposition" value="filename=""#filename#""" charset="UTF-8">
 </cfif>
 
-<!---<cfheader name="Accept-Ranges" value="bytes">--->
 <cfheader name="Content-Length" value="#fileInfo.size#">
 
 <cfcontent file="#source#" deletefile="no" type="#filetype#" /><!---if the file attribute is specified, ColdFusion attempts to get the content type from the file, but it fail with many extensions (like .pdf)--->
