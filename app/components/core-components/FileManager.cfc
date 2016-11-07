@@ -311,6 +311,7 @@
 
 						<!--- Delete thumbnail --->
 						<cfif fileQuery.thumbnail IS true>
+							<!--- The name of the thumbnail file is always the id of the file --->
 							<cfset thumbnailFilePath = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#_thumbnails/#fileQuery.id#'>
 							<cfif FileExists(thumbnailFilePath)>
 								<cffile action="delete" file="#thumbnailFilePath#">
@@ -801,7 +802,7 @@
 
 	<cffunction name="generateThumbnailFromPdf" returntype="void" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
-		<cfargument name="physical_name" type="string" required="true">	
+		<cfargument name="physical_name" type="string" required="true">
 		<cfargument name="sourceFile" type="string" required="true">
 		<cfargument name="destinationPath" type="string" required="true">
 

@@ -26,7 +26,7 @@ files_directory
 
 	</cfif>
 
-	<!--- The name of the thumbnail is always the id of the file --->
+	<!--- The name of the thumbnail file is always the id of the file --->
 	<cfset files_directory = "files_thumbnails">
 	<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.id#'>
 
