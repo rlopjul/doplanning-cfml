@@ -58,7 +58,13 @@
 			</cfoutput>
 		</cfsavecontent>
 
-		<cffile action="write" output="#htaccessContent#" file="#ExpandPath('#APPLICATION.path#/#new_client_abb#/temp/.htaccess')#">
+		<cfset htaccesDir = ExpandPath('#APPLICATION.path#/#new_client_abb#/temp/')>
+
+		<cfif NOT DirectoryExists(htaccesDir)>
+			<cfset DirectoryCreate(htaccesDir)>
+		</cfif>
+
+		<cffile action="write" output="#htaccessContent#" file="#htaccesDir#.htaccess">
 
 		<cfcatch>
 			<cfoutput>
