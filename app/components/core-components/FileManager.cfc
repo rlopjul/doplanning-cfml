@@ -797,15 +797,7 @@
 
 							<cfreturn generateThumbnailResult>
 
-						<cfelse>
-
-							<cfreturn false>
-
-						</cfif>
-
-					<cfelse>
-
-						<cfreturn false>
+						</cfif>		
 
 					</cfif>
 
@@ -819,6 +811,8 @@
 				<cfthrow errorcode="#error_code#" detail="#sourceFile#">
 
 			</cfif>
+
+			<cfreturn false>
 
 
 	</cffunction>
