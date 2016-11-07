@@ -166,7 +166,7 @@
 								<a href="#CGI.SCRIPT_NAME#" class="btn btn-default btn-sm navbar-btn navbar-right" style="margin-left:8px;margin-right:5px;"><i class="icon-refresh icon-white"></i></a>
 							</cfif>--->
 
-							<p class="navbar-text navbar-right">#itemsQuery.recordCount# <cfif itemsQuery.recordCount IS 1><span lang="es">elemento</span><cfelse><span lang="es">elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>
+							<p class="navbar-text navbar-right">#itemsQuery.recordCount# <cfif itemsQuery.recordCount IS 1><span lang="es">Elemento</span><cfelse><span lang="es">Elementos</span></cfif>&nbsp;&nbsp;&nbsp;</p>
 
 							</cfoutput>
 
