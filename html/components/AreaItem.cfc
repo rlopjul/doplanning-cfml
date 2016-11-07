@@ -1935,9 +1935,14 @@
 
 						<div class="media">
 
-							<cfif len(objectItem.attached_file_thumbnail_format) GT 0>
+							<cfif len(objectItem.attached_file_thumbnail_format) GT 0 OR len(objectItem.attached_image_thumbnail_format) GT 0>
 								<div class="media-left">
-									<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#&thumbnail=1" alt="Thumbnail" class="media-object img-thumbnail"/>
+									<cfif len(objectItem.attached_file_thumbnail_format) GT 0>
+										<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#&thumbnail=1" alt="Thumbnail" class="media-object img-thumbnail"/>
+									</cfif>
+									<cfif len(objectItem.attached_image_thumbnail_format) GT 0>
+										<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_image_id#&#itemTypeName#=#objectItem.id#&thumbnail=1" alt="Thumbnail" class="media-object img-thumbnail"/>
+									</cfif>
 								</div>
 							</cfif>
 
