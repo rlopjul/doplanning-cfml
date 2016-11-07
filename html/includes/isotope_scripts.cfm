@@ -1,4 +1,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.isotope/2.2.2/isotope.pkgd.min.js"></script>
+<script src="//npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
+
 
 <cfoutput>
 <script>
