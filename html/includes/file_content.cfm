@@ -57,15 +57,7 @@
 
 </cfif>
 
-<!---
-<cfoutput>
-<script src="#APPLICATION.htmlPath#/language/area_item_en.js" charset="utf-8" type="text/javascript"></script>
-</cfoutput> --->
-
-
-<!---<div class="contenedor_fondo_blanco">--->
 <cfinclude template="#APPLICATION.htmlPath#/includes/alert_message.cfm">
-<!---</div>--->
 
 <script>
 
@@ -113,32 +105,17 @@
 
 </script>
 
-
-<!---<cfinclude template="#APPLICATION.htmlPath#/includes/file_name_head.cfm">--->
-
 <cfoutput>
 <div class="div_elements_menu"><!---div_elements_menu--->
 
-	<!---<cfif APPLICATION.identifier NEQ "vpnet">---><!---DP--->
-
 		<cfinclude template="#APPLICATION.htmlPath#/includes/file_content_menu.cfm">
 
-	<!---<cfelse>
-
-		<cfinclude template="#APPLICATION.htmlPath#/includes/file_content_menu_vpnet.cfm">
-
-	</cfif>--->
-
 </div>
-<!---<cfdump var="#objectFile.file_types_conversion#">--->
 </cfoutput>
 
 <cfoutput>
-	<!---<div class="div_file_page_name">#objectFile.name#</div>
-	<div class="div_separator"><!-- --></div>--->
-	<!---<div class="div_file_page_file">--->
 
-	<div class="panel panel-default"><!---class="div_message_page_message"--->
+	<div class="panel panel-default">
 
 		<div class="panel-body" style="word-wrap:break-word;overflow-x:auto">
 
@@ -151,22 +128,6 @@
 						<div class="media-left">
 
 							<a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">
-
-								<!---
-								<div class="div_file_page_label">
-									<cfif objectFile.file_type_id IS 1><!--- User file --->
-										<a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">
-										<cfif len(objectFile.user_image_type) GT 0>
-											<img src="#APPLICATION.htmlPath#/download_user_image.cfm?id=#objectFile.user_in_charge#&type=#objectFile.user_image_type#&small=" alt="#objectFile.user_full_name#" class="item_img" style="margin-right:2px;"/>
-										<cfelse>
-											<img src="#APPLICATION.htmlPath#/assets/v3/icons/user_default.png" alt="#objectFile.user_full_name#" class="item_img_default" style="margin-right:2px;"/>
-										</cfif></a>
-									<cfelse><!--- Area file --->
-										<span lang="es">Creado por</span>
-									</cfif>
-									<a href="area_user.cfm?area=#area_id#&user=#objectFile.user_in_charge#">#objectFile.user_full_name#</a>
-								</div>
-								--->
 
 								<cfinvoke component="#APPLICATION.htmlComponentsPath#/User" method="outputUserImage">
 									<cfinvokeargument name="user_id" value="#objectFile.user_in_charge#">
@@ -254,19 +215,15 @@
 																	<span lang="es">Debe validar o rechazar la versión de este archivo</span><br/>
 																	<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=true&return_path=#return_path#" onclick="return confirmValidateFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Validar versión</span></a>
 
-
-																	<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=validateFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&valid=false&return_path=#return_path#" onclick="return confirmValidateFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
 																	<a href="file_reject_revision.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
-
 
 															<cfelseif version.revised IS true AND SESSION.user_id IS objectFile.approver_user>
 																<!--- approveFileVersion --->
 
 																	<span lang="es">Debe aprobar o rechazar la versión de este archivo</span><br/>
 																	<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=true&return_path=#return_path#" onclick="return confirmApproveFile(true);" class="btn btn-success btn-sm"><i class="icon-check"></i> <span lang="es">Aprobar versión</span></a>
-																	<!---<a href="#APPLICATION.htmlComponentsPath#/File.cfc?method=approveFileVersion&file_id=#objectFile.id#&fileTypeId=#fileTypeId#&area_id=#area_id#&approve=false&return_path=#return_path#" onclick="return confirmApproveFile(false);" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>--->
-																	<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
 
+																	<a href="file_reject_approval.cfm?file=#objectFile.id#&fileTypeId=#fileTypeId#&area=#area_id#&return_path=#return_path#" class="btn btn-danger btn-sm"><i class="icon-remove-sign"></i> <span lang="es">Rechazar versión</span></a>
 
 															</cfif>
 
@@ -327,9 +284,6 @@
 									</cfif>
 
 									<div class="div_file_page_label">
-										<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Area" method="getArea" returnvariable="fileArea">
-											<cfinvokeargument name="area_id" value="#objectFile.area_id#">
-										</cfinvoke>--->
 
 										<cfset file_area_allowed = false>
 
@@ -379,7 +333,6 @@
 								</cfif><!--- END objectFile.file_type_id IS 2 OR objectFile.file_type_id IS 3 --->
 
 
-								<!---<div class="div_file_page_user">#objectFile.user_full_name#</div>--->
 							</cfif>
 							<cfif objectFile.file_type_id IS NOT 1 AND len(objectFile.replacement_user) GT 0>
 								<div class="div_file_page_label">
@@ -433,9 +386,7 @@
 								<cfset file_size = objectFile.file_size>
 							</cfif>
 
-							<!---<div class="div_file_page_size">--->
-								<div class="div_file_page_label"><span lang="es">Tamaño</span> <span class="text_file_page">#file_size#</span></div>
-							<!---</div>--->
+							<div class="div_file_page_label"><span lang="es">Tamaño</span> <span class="text_file_page">#file_size#</span></div>
 
 							<div class="div_file_page_label"><span lang="es">Descripción</span></div>
 							<div class="div_file_page_description">#objectFile.description#</div>
@@ -509,25 +460,6 @@
 								<div class="div_file_page_label"><span lang="es">URL para enlazar a</span> <b lang="es">descargar el archivo desde #APPLICATION.title#</b>:</div>
 								<div class="div_file_page_user"><input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
 
-								<!---<link href="#APPLICATION.htmlPath#/bootstrap/bootstrap-dropdowns-enhancement/css/dropdowns-enhancement.min.css" rel="stylesheet">
-								<script src="#APPLICATION.htmlPath#/bootstrap/bootstrap-dropdowns-enhancement/js/dropdowns-enhancement.min.js"></script>
-
-								<div class="dropdown">
-
-								  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-								    Obtener URL del archivo
-								    <span class="caret"></span>
-								  </button>
-
-								  <ul class="dropdown-menu noclose" role="menu" aria-labelledby="dropdownMenu1">
-								    <li role="presentation">
-								    	<span lang="es">URL de <b>descarga</b> desde #APPLICATION.title#:</span><br/>
-								    	<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text;width:400px;"/></li>
-								    <li role="presentation">URL de desde #APPLICATION.title#:</span><br/>
-								    	<input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control" readonly="readonly" style="cursor:text;width:400px;"/></li>
-								  </ul>
-
-								</div>--->
 
 								<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
 
@@ -591,58 +523,12 @@
 							</div><!--- END well well-sm --->
 
 
-							<!---
-							<div style="clear:both">
-
-								<button class="btn btn-default btn-sm" type="button" id="showFilesUrls" data-toggle="collapse" data-target="##fileUrlsContainer" aria-expanded="false" aria-controls="fileUrlsContainer">
-								  <i class="icon-expand-alt" style="font-size:16px;"></i> Mostrar URLs del archivo
-								</button>
-
-								<button class="btn btn-default btn-sm" type="button" id="hideFilesUrls" data-toggle="collapse" data-target="##fileUrlsContainer" aria-expanded="false" aria-controls="fileUrlsContainer" style="display:none">
-								  <i class="icon-collapse-alt" style="font-size:16px;"></i> Ocultar URLs del archivo
-								</button>
-
-								<div class="collapse" id="fileUrlsContainer">
-
-								</div>
-
-							</div>
-
-							<script>
-
-								$('##fileUrlsContainer').on('hidden.bs.collapse', function () {
-									$('##showFilesUrls').show();
-									$('##hideFilesUrls').hide();
-
-								});
-
-								$('##fileUrlsContainer').on('shown.bs.collapse', function () {
-									$('##showFilesUrls').hide();
-									$('##hideFilesUrls').show();
-								});
-
-							</script>
-
-							--->
-
 							<!---Typology--->
 							<cfif APPLICATION.modulefilesWithTables IS true>
 
 								<!---Typology fields--->
-								<!---<cfset table_id = objectFile.typology_id>
-								<cfset tableTypeId = 3>
-								<cfset row_id = objectFile.typology_row_id>--->
 
 								<cfif isNumeric(table_id) AND isNumeric(row_id)>
-
-									<!---<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="getRow" returnvariable="getRowResponse">
-										<cfinvokeargument name="table_id" value="#table_id#"/>
-										<cfinvokeargument name="tableTypeId" value="#tableTypeId#"/>
-										<cfinvokeargument name="row_id" value="#row_id#"/>
-										<cfinvokeargument name="file_id" value="#objectFile.id#"/>
-									</cfinvoke>
-									<cfset table = getRowResponse.table>
-									<cfset row = getRowResponse.row>--->
 
 									<div class="div_file_page_label"><span lang="es">Tipología</span> <span class="text_message_page"><span class="label label-primary">#table.title#</span></span></div>
 
