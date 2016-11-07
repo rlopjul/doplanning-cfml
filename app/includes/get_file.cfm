@@ -9,7 +9,7 @@ files_directory
 <cfif APPLICATION.moduleThumbnails IS true AND isDefined("URL.thumbnail") AND URL.thumbnail IS true>
 
 	<cfset thumb = true>
-	<cfset files_directory = files_directory&"_thumbnails">
+	<cfset files_directory = "files_thumbnails">
 
 	<cfif len(objectFile.thumbnail_format) IS 0>
 

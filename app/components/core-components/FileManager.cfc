@@ -693,7 +693,11 @@
 			<!--- Generate thumbnails --->
 			<cfif FileExists(sourceFile)>
 
-				<cfset destinationThumbnail = "#APPLICATION.filesPath#/#arguments.client_abb#/#fileTypeDirectory#_thumbnails/">
+				<cfif arguments.fileTypeId IS 1 OR arguments.fileTypeId IS 2 OR arguments.fileTypeId IS 3>
+					<cfset destinationThumbnail = "#APPLICATION.filesPath#/#arguments.client_abb#/files_thumbnails/">
+				<cfelse>
+					<cfset destinationThumbnail = "#APPLICATION.filesPath#/#arguments.client_abb#/#fileTypeDirectory#_thumbnails/">
+				</cfif>
 
 				<!---<cfif NOT directoryExists(destinationThumbnail)>
 						<cfdirectory action="create" directory="#destinationThumbnail#">
