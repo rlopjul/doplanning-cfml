@@ -48,6 +48,18 @@
 				<cfdirectory action="create" directory="#filesThumbnailsPath#">
 		</cfif>
 
+		<!--- Create .htaccess file --->
+		<cfsavecontent variable="htaccessContent">
+			<cfoutput>
+			## Redirect to authorization page
+			Options +FollowSymLinks
+			RewriteEngine on
+			RewriteRule ^(.*)$ ../../html/authorize_access_static_file.cfm?file=$1&abb=#new_client_abb# [NC]
+			</cfoutput>
+		</cfsavecontent>
+
+		<cffile action="write" output="#htaccessContent#" file="#ExpandPath('#APPLICATION.path#/#new_client_abb#/temp/.htaccess')#">
+
 		<cfcatch>
 			<cfoutput>
 				<b>#new_client_abb# NO migrado a versión #version_id#</b><br/>
