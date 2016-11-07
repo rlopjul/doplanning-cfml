@@ -1937,7 +1937,7 @@
 
 							<cfif len(objectItem.attached_file_thumbnail_format) GT 0>
 								<div class="media-left">
-									<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&thumbnail=1" alt="Thumbnail" class="media-object img-thumbnail"/>
+									<img src="#APPLICATION.htmlPath#/file_download.cfm?id=#objectItem.attached_file_id#&#itemTypeName#=#objectItem.id#&thumbnail=1" alt="Thumbnail" class="media-object img-thumbnail"/>
 								</div>
 							</cfif>
 
