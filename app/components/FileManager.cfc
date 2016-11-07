@@ -4349,6 +4349,20 @@
 				</cfif>
 
 
+				<!--- MODULE THUMBNAILS --->
+				<cfif APPLICATION.moduleThumbnails IS true>
+
+					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnail">
+						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="fileTypeId" value="#arguments.fileTypeId#">
+
+						<cfinvokeargument name="client_abb" value="#client_abb#">
+						<cfinvokeargument name="client_dsn" value="#client_dsn#">
+					</cfinvoke>
+
+				</cfif>
+
+
 				<!--- MODULE ANTI VIRUS --->
 				<cfif APPLICATION.moduleAntiVirus IS true>
 
