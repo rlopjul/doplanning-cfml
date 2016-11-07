@@ -731,10 +731,14 @@
 						<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
 						<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
 
+						<cfif NOT IsImageFile(destinationThumbnail)>
+							<cfthrow message="Error al generar la miniatura de la imagen, la imagen no es compatible">
+						</cfif>
+
 						<cfcatch>
 
-							<cfif FileExists("#arguments.destinationPath##arguments.file_id#")>
-								<cfset FileDelete("#arguments.destinationPath##arguments.file_id#")>
+							<cfif FileExists(destinationThumbnail)>
+								<cfset FileDelete(destinationThumbnail)>
 							</cfif>
 
 							<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
