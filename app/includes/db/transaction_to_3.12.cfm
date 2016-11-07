@@ -38,6 +38,15 @@
 
 		</cfquery>
 
+		<cfset filesConvertedPath = "#APPLICATION.filesPath#/#new_client_abb#/files_converted">
+		<cfif NOT directoryExists(filesConvertedPath)>
+				<cfdirectory action="create" directory="#filesConvertedPath#">
+		</cfif>
+
+		<cfset filesThumbnailsPath = "#APPLICATION.filesPath#/#new_client_abb#/files_thumbnails">
+		<cfif NOT directoryExists(filesThumbnailsPath)>
+				<cfdirectory action="create" directory="#filesThumbnailsPath#">
+		</cfif>
 
 		<cfcatch>
 			<cfoutput>
