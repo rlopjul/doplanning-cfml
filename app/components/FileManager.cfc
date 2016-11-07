@@ -2613,7 +2613,7 @@
 
 
 			<cfquery datasource="#client_dsn#" name="fileQuery">
-				SELECT status_replacement, status, id, physical_name, user_in_charge, file_size, file_type, uploading_date, replacement_date, name, file_name, description
+				SELECT status_replacement, status, id, physical_name, user_in_charge, file_size, file_type, uploading_date, replacement_date, name, file_name, description, file_type_id
 				FROM #client_abb#_files
 				WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 			</cfquery>
@@ -2680,6 +2680,21 @@
 									WHERE id = <cfqueryparam value="#item_id#" cfsqltype="cf_sql_integer">;
 								</cfquery>
 							</cfif>
+
+
+							<!--- MODULE THUMBNAILS --->
+							<cfif APPLICATION.moduleThumbnails IS true>
+
+								<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnail">
+									<cfinvokeargument name="file_id" value="#arguments.file_id#">
+									<cfinvokeargument name="fileTypeId" value="#fileQuery.file_type_id#">
+
+									<cfinvokeargument name="client_abb" value="#client_abb#">
+									<cfinvokeargument name="client_dsn" value="#client_dsn#">
+								</cfinvoke>
+
+							</cfif>
+
 
 							<!--- MODULE ANTI VIRUS --->
 							<cfif APPLICATION.moduleAntiVirus IS true>

@@ -44,8 +44,7 @@
 			<cfinclude template="#APPLICATION.corePath#/includes/areaItemTypeSwitch.cfm">
 
 			<cfquery name="selectItemQuery" datasource="#client_dsn#">
-				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, items.area_id, items.link, items.status,
-				users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
+				SELECT items.id, items.id AS item_id, items.parent_id, items.parent_kind, items.user_in_charge,  items.title, items.description, items.attached_file_id, items.attached_file_name, files.file_type, files.thumbnail AS attached_file_thumbnail, files.thumbnail_format AS attached_file_thumbnail_format, items.area_id, items.link, items.status, users.name AS user_name, users.family_name, CONCAT_WS(' ', users.family_name, users.name) AS user_full_name, users.image_type AS user_image_type
 				<cfif arguments.parse_dates IS true>
 					, DATE_FORMAT(CONVERT_TZ(items.creation_date,'SYSTEM','#timeZoneTo#'), '#dateTimeFormat#') AS creation_date
 				<cfelse>
@@ -57,7 +56,7 @@
 					<cfelse>
 					, items.last_update_date
 					</cfif>
-					, items.attached_image_id, items.attached_image_name
+					, items.attached_image_id, items.attached_image_name, images.thumbnail AS attached_image_thumbnail, images.thumbnail_format AS attached_image_thumbnail_format
 					<cfif arguments.itemTypeId IS NOT 7><!---Is not Consultations--->
 						, items.last_update_user_id
 						, CONCAT_WS(' ', last_update_users.family_name, last_update_users.name) AS last_update_user_full_name, last_update_users.image_type AS last_update_user_image_type
@@ -147,8 +146,11 @@
 				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5>
 					INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
 				</cfif>
-				<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7><!--- IS NOT Messages and Consultations --->
-					LEFT JOIN #client_abb#_users AS last_update_users ON items.last_update_user_id = last_update_users.id
+				<cfif arguments.itemTypeId IS NOT 1><!--- IS NOT Messages --->
+					LEFT JOIN #client_abb#_files AS images ON images.id = items.attached_image_id
+					<cfif arguments.itemTypeId IS NOT 7><!--- IS NOT Messages and Consultations --->
+						LEFT JOIN #client_abb#_users AS last_update_users ON items.last_update_user_id = last_update_users.id
+					</cfif>
 				</cfif>
 				<cfif arguments.itemTypeId IS 6><!--- Task --->
 					INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
