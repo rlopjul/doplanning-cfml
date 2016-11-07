@@ -435,124 +435,130 @@
 							</cfif>
 
 
-							<div class="well well-sm" style="clear:both;margin-bottom:10px">
-
-								<!---fileUrl--->
-								<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
-									<cfinvokeargument name="file_id" value="#objectFile.id#">
-									<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
-									<cfinvokeargument name="area_id" value="#area_id#">
-
-									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-								</cfinvoke>
-
-								<div class="div_file_page_label"><span lang="es">URL para compartir el archivo con</span> <b lang="es">usuarios de #APPLICATION.title#</b>:</div>
-								<div class="div_file_page_user"><input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
-
-								<!---getDownloadFileUrl--->
-								<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
-									<cfinvokeargument name="file_id" value="#objectFile.id#">
-									<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
-
-									<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-								</cfinvoke>
-
-								<div class="div_file_page_label"><span lang="es">URL para enlazar a</span> <b lang="es">descargar el archivo desde #APPLICATION.title#</b>:</div>
-								<div class="div_file_page_user"><input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
-
-
-								<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
-
-								<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
-
-									<!---fileWebUrl--->
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
-										<cfinvokeargument name="file_id" value="#objectFile.id#">
-										<cfinvokeargument name="area_id" value="#area_id#">
-									</cfinvoke>
-									<cfset fileWebUrl = "/#webPath#/#filePage#">
-
-									<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">relativa para enlazar el archivo en la #area_type#</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
-									<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
-
-									<cfif area_type EQ "web" AND isDefined("webPathUrl")>
-
-										<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">absoluta para enlazar el archivo desde cualquier sitio</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
-										<div class="div_file_page_user"><input type="text" value="#webPathUrl##fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
-
-									</cfif>
-
-								<cfelseif APPLICATION.publicationScope IS true AND ( SESSION.client_abb EQ "hcs" ) AND ( objectFile.publication_scope_id IS 2 OR objectFile.publication_scope_id IS 3 )><!--- Scope IS Web OR Intranet --->
-
-									<!--- Permite que se muestre esta URL para los archivos que tienen asociado el ámbito WEB o INTRANET --->
-
-									<cfif objectFile.publication_scope_id IS 2>
-										<cfset webPath = "intranet">
-									<cfelse>
-										<cfset webPath = "web">
-									</cfif>
-
-									<!---fileWebUrl--->
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
-										<cfinvokeargument name="file_id" value="#objectFile.id#">
-									</cfinvoke>
-									<cfset fileWebUrl = "/#webPath#/#filePage#">
-
-									<div class="div_file_page_label"><span lang="es">URL relativa para</span> <b lang="es">enlazar el archivo en la #webPath#</b>:</div>
-									<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
-
-								</cfif>
-
-								<!---</cfif>--->
-
-								<cfif (fileTypeId IS 1 OR fileTypeId IS 2) AND objectFile.public IS true>
-
-									<!---fileWebUrl--->
-									<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFilePublicUrl" returnvariable="filePublicUrl">
-										<cfinvokeargument name="file_public_id" value="#objectFile.file_public_id#">
-
-										<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
-									</cfinvoke>
-
-									<div class="div_file_page_label"><span lang="es">URL pública para</span> <b lang="es">compartir el archivo con cualquier usuario</b>:</div>
-									<div class="div_file_page_user"><input type="text" value="#filePublicUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
-
-								</cfif>
-
-
-							</div><!--- END well well-sm --->
-
-
-							<!---Typology--->
-							<cfif APPLICATION.modulefilesWithTables IS true>
-
-								<!---Typology fields--->
-
-								<cfif isNumeric(table_id) AND isNumeric(row_id)>
-
-									<div class="div_file_page_label"><span lang="es">Tipología</span> <span class="text_message_page"><span class="label label-primary">#table.title#</span></span></div>
-
-									<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
-
-									<!---outputRowContent--->
-									<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowContent">
-										<cfinvokeargument name="table_id" value="#table_id#">
-										<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
-										<cfinvokeargument name="area_id" value="#area_id#">
-										<cfinvokeargument name="row" value="#row#">
-										<cfinvokeargument name="fields" value="#fields#">
-										<cfinvokeargument name="file_id" value="#file_id#"/>
-									</cfinvoke>
-
-								</cfif>
-
-							</cfif>
-						<!--- </div> --->
-
-
 						</div><!--- END media-body --->
 
 					</div><!--- END media --->
+
+				</div><!--- END col-sm-12 --->
+
+			</div><!--- END row --->
+
+			<div class="row">
+
+				<div class="col-sm-12">
+
+					<div class="well well-sm" style="clear:both;margin-bottom:10px">
+
+						<!---fileUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getAreaFileUrl" returnvariable="areaFileUrl">
+							<cfinvokeargument name="file_id" value="#objectFile.id#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+							<cfinvokeargument name="area_id" value="#area_id#">
+
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						</cfinvoke>
+
+						<div class="div_file_page_label"><span lang="es">URL para compartir el archivo con</span> <b lang="es">usuarios de #APPLICATION.title#</b>:</div>
+						<div class="div_file_page_user"><input type="text" value="#areaFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+						<!---getDownloadFileUrl--->
+						<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getDownloadFileUrl" returnvariable="downloadFileUrl">
+							<cfinvokeargument name="file_id" value="#objectFile.id#">
+							<cfinvokeargument name="fileTypeId" value="#fileTypeId#">
+
+							<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+						</cfinvoke>
+
+						<div class="div_file_page_label"><span lang="es">URL para enlazar a</span> <b lang="es">descargar el archivo desde #APPLICATION.title#</b>:</div>
+						<div class="div_file_page_user"><input type="text" value="#downloadFileUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+
+						<!---<cfif SESSION.client_abb EQ "hcs">---><!---DoPlanning HCS--->
+
+						<cfif (area_type EQ "web" OR area_type EQ "intranet") AND isDefined("webPath")>
+
+							<!---fileWebUrl--->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
+								<cfinvokeargument name="file_id" value="#objectFile.id#">
+								<cfinvokeargument name="area_id" value="#area_id#">
+							</cfinvoke>
+							<cfset fileWebUrl = "/#webPath#/#filePage#">
+
+							<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">relativa para enlazar el archivo en la #area_type#</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
+							<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+							<cfif area_type EQ "web" AND isDefined("webPathUrl")>
+
+								<div class="div_file_page_label"><span lang="es">URL</span> <b lang="es">absoluta para enlazar el archivo desde cualquier sitio</b><cfif APPLICATION.publicationValidation IS true AND objectFile.publication_validated IS false>(publicación de archivo <b>no aprobada</b>)</cfif></span>:</div>
+								<div class="div_file_page_user"><input type="text" value="#webPathUrl##fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+							</cfif>
+
+						<cfelseif APPLICATION.publicationScope IS true AND ( SESSION.client_abb EQ "hcs" ) AND ( objectFile.publication_scope_id IS 2 OR objectFile.publication_scope_id IS 3 )><!--- Scope IS Web OR Intranet --->
+
+							<!--- Permite que se muestre esta URL para los archivos que tienen asociado el ámbito WEB o INTRANET --->
+
+							<cfif objectFile.publication_scope_id IS 2>
+								<cfset webPath = "intranet">
+							<cfelse>
+								<cfset webPath = "web">
+							</cfif>
+
+							<!---fileWebUrl--->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFileWebPage" returnvariable="filePage">
+								<cfinvokeargument name="file_id" value="#objectFile.id#">
+							</cfinvoke>
+							<cfset fileWebUrl = "/#webPath#/#filePage#">
+
+							<div class="div_file_page_label"><span lang="es">URL relativa para</span> <b lang="es">enlazar el archivo en la #webPath#</b>:</div>
+							<div class="div_file_page_user"><input type="text" value="#fileWebUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+						</cfif>
+
+						<!---</cfif>--->
+
+						<cfif (fileTypeId IS 1 OR fileTypeId IS 2) AND objectFile.public IS true>
+
+							<!---fileWebUrl--->
+							<cfinvoke component="#APPLICATION.coreComponentsPath#/UrlManager" method="getFilePublicUrl" returnvariable="filePublicUrl">
+								<cfinvokeargument name="file_public_id" value="#objectFile.file_public_id#">
+
+								<cfinvokeargument name="client_abb" value="#SESSION.client_abb#">
+							</cfinvoke>
+
+							<div class="div_file_page_label"><span lang="es">URL pública para</span> <b lang="es">compartir el archivo con cualquier usuario</b>:</div>
+							<div class="div_file_page_user"><input type="text" value="#filePublicUrl#" onClick="this.select();" class="form-control item_url_dp" readonly="readonly" style="cursor:text"/></div>
+
+						</cfif>
+
+
+					</div><!--- END well well-sm --->
+
+
+					<!---Typology--->
+					<cfif APPLICATION.modulefilesWithTables IS true>
+
+						<!---Typology fields--->
+
+						<cfif isNumeric(table_id) AND isNumeric(row_id)>
+
+							<div class="div_file_page_label"><span lang="es">Tipología</span> <span class="text_message_page"><span class="label label-primary">#table.title#</span></span></div>
+
+							<!---<cfinclude template="#APPLICATION.htmlPath#/includes/table_row_content_fields.cfm">--->
+
+							<!---outputRowContent--->
+							<cfinvoke component="#APPLICATION.htmlComponentsPath#/Row" method="outputRowContent">
+								<cfinvokeargument name="table_id" value="#table_id#">
+								<cfinvokeargument name="tableTypeId" value="#tableTypeId#">
+								<cfinvokeargument name="area_id" value="#area_id#">
+								<cfinvokeargument name="row" value="#row#">
+								<cfinvokeargument name="fields" value="#fields#">
+								<cfinvokeargument name="file_id" value="#file_id#"/>
+							</cfinvoke>
+
+						</cfif>
+
+					</cfif>
 
 				</div><!--- END col-sm-12 --->
 
