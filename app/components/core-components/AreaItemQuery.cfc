@@ -56,7 +56,7 @@
 					<cfelse>
 					, items.last_update_date
 					</cfif>
-					, items.attached_image_id, items.attached_image_name
+					, items.attached_image_id, items.attached_image_name, images.thumbnail AS attached_image_thumbnail, images.thumbnail_format AS attached_image_thumbnail_format
 					<cfif arguments.itemTypeId IS NOT 7><!---Is not Consultations--->
 						, items.last_update_user_id
 						, CONCAT_WS(' ', last_update_users.family_name, last_update_users.name) AS last_update_user_full_name, last_update_users.image_type AS last_update_user_image_type
@@ -146,8 +146,11 @@
 				<cfif arguments.itemTypeId IS 2 OR arguments.itemTypeId IS 4 OR arguments.itemTypeId IS 5>
 					INNER JOIN #client_abb#_iframes_display_types AS iframes_display_types ON items.iframe_display_type_id = iframes_display_types.iframe_display_type_id
 				</cfif>
-				<cfif arguments.itemTypeId IS NOT 1 AND arguments.itemTypeId IS NOT 7><!--- IS NOT Messages and Consultations --->
-					LEFT JOIN #client_abb#_users AS last_update_users ON items.last_update_user_id = last_update_users.id
+				<cfif arguments.itemTypeId IS NOT 1><!--- IS NOT Messages --->
+					LEFT JOIN #client_abb#_files AS images ON images.id = items.attached_image_id
+					<cfif arguments.itemTypeId IS NOT 7><!--- IS NOT Messages and Consultations --->
+						LEFT JOIN #client_abb#_users AS last_update_users ON items.last_update_user_id = last_update_users.id
+					</cfif>
 				</cfif>
 				<cfif arguments.itemTypeId IS 6><!--- Task --->
 					INNER JOIN #client_abb#_users AS recipient_users ON items.recipient_user = recipient_users.id
