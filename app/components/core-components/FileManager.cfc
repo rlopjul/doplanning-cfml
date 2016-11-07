@@ -273,9 +273,6 @@
 						<!--- Now we delete physically the file on the server --->
 						<cfif FileExists(filePath)><!---If the physical file exist--->
 							<cffile action="delete" file="#filePath#">
-						<cfelse><!---The physical file does not exist--->
-							<!---<cfset error_code = 608>
-							<cfthrow errorcode="#error_code#">--->
 						</cfif>
 
 						<cfif APPLICATION.moduleConvertFiles IS true>
