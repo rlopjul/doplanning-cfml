@@ -6,9 +6,27 @@ files_directory
 <cfsetting requesttimeout="#APPLICATION.filesTimeout#">
 
 <!--- Thumbnail --->
-<cfif isDefined("URL.thumbnail") AND URL.thumbnail IS true AND len(objectFile.thumbnail_format) GT 0>
+<cfif APPLICATION.moduleThumbnails IS true AND isDefined("URL.thumbnail") AND URL.thumbnail IS true>
+
 	<cfset thumb = true>
 	<cfset files_directory = files_directory&"_thumbnails">
+
+	<cfif len(objectFile.thumbnail_format) IS 0>
+
+		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnail" returnvariable="thumb">
+			<cfinvokeargument name="file_id" value="#objectFile.id#">
+			<cfinvokeargument name="fileTypeId" value="#objectFile.file_type_id#">
+
+			<cfinvokeargument name="client_abb" value="#client_abb#">
+			<cfinvokeargument name="client_dsn" value="#client_dsn#">
+		</cfinvoke>
+
+		<cfif thumb IS false>
+			<cfthrow message="Miniatura no disponible">
+		</cfif>
+
+	</cfif>
+
 <cfelse>
 	<cfset thumb = false>
 </cfif>
