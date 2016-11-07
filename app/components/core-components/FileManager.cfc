@@ -663,7 +663,7 @@
 
 	<!--- ----------------------- GENERATE THUMBNAIL -------------------------------- --->
 
-	<cffunction name="generateThumbnail" returntype="void" output="false" access="public">
+	<cffunction name="generateThumbnail" returntype="boolean" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="fileTypeId" type="numeric" required="true">
 
@@ -712,6 +712,7 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
+					<cfreturn true>
 
 				<cfelseif listFind(".jpg,.jpeg,.png,.gif",fileQuery.file_type) GT 0>
 
@@ -731,6 +732,8 @@
 						thumbnail_format = <cfqueryparam value="#thumbnailFormat#" cfsqltype="cf_sql_varchar">
 						WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 					</cfquery>
+
+					<cfreturn true>
 
 				<cfelseif APPLICATION.moduleConvertFiles IS true>
 
@@ -764,6 +767,12 @@
 							</cfinvoke>
 
 						</cfif>
+
+						<cfreturn true>
+
+					<cfelse>
+
+						<cfreturn false>
 
 					</cfif>
 
