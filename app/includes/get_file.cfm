@@ -9,7 +9,6 @@ files_directory
 <cfif APPLICATION.moduleThumbnails IS true AND isDefined("URL.thumbnail") AND URL.thumbnail IS true>
 
 	<cfset thumb = true>
-	<cfset files_directory = "files_thumbnails">
 
 	<cfif len(objectFile.thumbnail_format) IS 0>
 
@@ -27,11 +26,16 @@ files_directory
 
 	</cfif>
 
+	<!--- The name of the thumbnail file is always the id of the file --->
+	<cfset files_directory = "files_thumbnails">
+	<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.id#'>
+
 <cfelse>
 	<cfset thumb = false>
+
+	<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>
 </cfif>
 
-<cfset source = '#APPLICATION.filesPath#/#client_abb#/#files_directory#/#objectFile.physical_name#'>
 
 <cfif FileExists(source)>
 

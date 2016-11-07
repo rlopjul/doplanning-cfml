@@ -273,9 +273,6 @@
 						<!--- Now we delete physically the file on the server --->
 						<cfif FileExists(filePath)><!---If the physical file exist--->
 							<cffile action="delete" file="#filePath#">
-						<cfelse><!---The physical file does not exist--->
-							<!---<cfset error_code = 608>
-							<cfthrow errorcode="#error_code#">--->
 						</cfif>
 
 						<cfif APPLICATION.moduleConvertFiles IS true>
@@ -311,6 +308,7 @@
 
 						<!--- Delete thumbnail --->
 						<cfif fileQuery.thumbnail IS true>
+							<!--- The name of the thumbnail file is always the id of the file --->
 							<cfset thumbnailFilePath = APPLICATION.filesPath&'/#client_abb#/#fileTypeDirectory#_thumbnails/#fileQuery.id#'>
 							<cfif FileExists(thumbnailFilePath)>
 								<cffile action="delete" file="#thumbnailFilePath#">
@@ -709,6 +707,7 @@
 
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnailFromPdf" returnvariable="generateThumbnailResult">
 						<cfinvokeargument name="file_id" value="#arguments.file_id#">
+						<cfinvokeargument name="physical_name" value="#fileQuery.physical_name#">
 						<cfinvokeargument name="sourceFile" value="#sourceFile#">
 						<cfinvokeargument name="destinationPath"	value="#destinationThumbnail#">
 
@@ -763,6 +762,7 @@
 
 							<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnailFromPdf" returnvariable="generateThumbnailResult">
 								<cfinvokeargument name="file_id" value="#arguments.file_id#">
+								<cfinvokeargument name="physical_name" value="#fileQuery.physical_name#">
 								<cfinvokeargument name="sourceFile" value="#convertFileResponse.file_converted_path#">
 								<cfinvokeargument name="destinationPath"	value="#destinationThumbnail#">
 
@@ -799,6 +799,7 @@
 
 	<cffunction name="generateThumbnailFromPdf" returntype="void" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
+		<cfargument name="physical_name" type="string" required="true">
 		<cfargument name="sourceFile" type="string" required="true">
 		<cfargument name="destinationPath" type="string" required="true">
 
@@ -807,9 +808,9 @@
 
 		<cfset thumbnailFormat = "jpg">
 
-		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#">
+		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#" overwrite="true">
 
-		<cffile action="rename" source="#arguments.destinationPath##arguments.file_id#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#">
+		<cffile action="rename" source="#arguments.destinationPath##arguments.physical_name#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#" nameconflict="overwrite">
 
 		<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
 			UPDATE #client_abb#_files
