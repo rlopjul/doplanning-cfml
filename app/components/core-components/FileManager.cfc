@@ -807,9 +807,9 @@
 
 		<cfset thumbnailFormat = "jpg">
 
-		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#">
+		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#" overwrite="true">
 
-		<cffile action="rename" source="#arguments.destinationPath##arguments.file_id#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#">
+		<cffile action="rename" source="#arguments.destinationPath##arguments.file_id#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#" nameconflict="overwrite">
 
 		<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
 			UPDATE #client_abb#_files
