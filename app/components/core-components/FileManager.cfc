@@ -725,9 +725,34 @@
 
 					<cfset destinationThumbnail = destinationThumbnail&arguments.file_id>
 
-					<cfimage source="#sourceFile#" name="imageToScale">
-					<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
-					<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
+					<cftry><!--- Try catch for image thumbnail generation errors --->
+
+						<cfimage source="#sourceFile#" name="imageToScale">
+						<cfset ImageScaleToFit(imageToScale, 150, "", "highQuality")>
+						<cfimage action="write" source="#imageToScale#" destination="#destinationThumbnail#" quality="0.85" overwrite="yes">
+
+						<cfif NOT IsImageFile(destinationThumbnail)>
+							<cfthrow message="Error al generar la miniatura de la imagen, la imagen no es compatible">
+						</cfif>
+
+						<cfcatch>
+
+							<cfif FileExists(destinationThumbnail)>
+								<cfset FileDelete(destinationThumbnail)>
+							</cfif>
+
+							<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+								UPDATE #client_abb#_files
+								SET thumbnail = <cfqueryparam value="0" cfsqltype="cf_sql_bit">,
+								thumbnail_format = <cfqueryparam cfsqltype="cf_sql_varchar" null="true">
+								WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+							</cfquery>
+
+							<cfreturn false>
+
+						</cfcatch>
+
+					</cftry>
 
 					<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
 						UPDATE #client_abb#_files
@@ -770,9 +795,13 @@
 								<cfinvokeargument name="client_dsn" value="#client_dsn#">
 							</cfinvoke>
 
-						</cfif>
+							<cfreturn generateThumbnailResult>
 
-						<cfreturn true>
+						<cfelse>
+
+							<cfreturn false>
+
+						</cfif>
 
 					<cfelse>
 
@@ -797,7 +826,7 @@
 
 	<!--- ----------------------- GENERATE THUMBNAIL FROM PDF -------------------------------- --->
 
-	<cffunction name="generateThumbnailFromPdf" returntype="void" output="false" access="public">
+	<cffunction name="generateThumbnailFromPdf" returntype="boolean" output="false" access="public">
 		<cfargument name="file_id" type="numeric" required="true">
 		<cfargument name="physical_name" type="string" required="true">
 		<cfargument name="sourceFile" type="string" required="true">
@@ -808,7 +837,27 @@
 
 		<cfset thumbnailFormat = "jpg">
 
-		<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#" overwrite="true">
+		<cftry><!--- Try catch for pdf thumbnail generation errors --->
+
+				<cfpdf action="thumbnail" source="#arguments.sourceFile#" pages="1" destination="#arguments.destinationPath#" format="#thumbnailFormat#" overwrite="true">
+
+			<cfcatch>
+
+				<cfif FileExists("#arguments.destinationPath##arguments.file_id#")>
+					<cfset FileDelete("#arguments.destinationPath##arguments.file_id#")>
+				</cfif>
+
+				<cfquery name="updateFileThumbnail" datasource="#client_dsn#">
+					UPDATE #client_abb#_files
+					SET thumbnail = <cfqueryparam value="0" cfsqltype="cf_sql_bit">,
+					thumbnail_format = <cfqueryparam cfsqltype="cf_sql_varchar" null="true">
+					WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
+				</cfquery>
+
+				<cfreturn false>
+			</cfcatch>
+
+		</cftry>
 
 		<cffile action="rename" source="#arguments.destinationPath##arguments.physical_name#_page_1.#thumbnailFormat#" destination="#arguments.destinationPath##arguments.file_id#" nameconflict="overwrite">
 
@@ -818,6 +867,8 @@
 			thumbnail_format = <cfqueryparam value=".#thumbnailFormat#" cfsqltype="cf_sql_varchar">
 			WHERE id = <cfqueryparam value="#arguments.file_id#" cfsqltype="cf_sql_integer">;
 		</cfquery>
+
+		<cfreturn true>
 
 	</cffunction>
 
