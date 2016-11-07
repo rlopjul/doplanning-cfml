@@ -453,6 +453,7 @@
 					<cfinvokeargument name="moduleDPDocuments" value="true">
 
 					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
+					<cfinvokeargument name="moduleConvertFiles" value="true">
 
 					<cfinvokeargument name="hideInputLabels" value="true">
 
