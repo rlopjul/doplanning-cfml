@@ -385,9 +385,6 @@
 					INNER JOIN #client_abb#_users AS users ON files.user_in_charge = users.id
 					LEFT JOIN #client_abb#_users AS last_update_users ON files.replacement_user = last_update_users.id
 				</cfif>
-				<cfif isDefined("arguments.user_in_charge")>
-					AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
-				</cfif>
 				<cfif arguments.with_area IS true>
 					INNER JOIN #client_abb#_areas AS areas ON a.area_id = areas.id
 				</cfif>
@@ -409,6 +406,9 @@
 				</cfif>
 
 				WHERE files.status = 'ok'
+				<cfif isDefined("arguments.user_in_charge")>
+					AND files.user_in_charge = <cfqueryparam value="#arguments.user_in_charge#" cfsqltype="cf_sql_integer">
+				</cfif>
 				<cfif isDefined("arguments.published") AND arguments.published IS true>
 					AND ( a.publication_date IS NULL OR a.publication_date <= NOW() )
 					<cfif isDefined("arguments.from_date") AND len(arguments.from_date) GT 0><!---getUserDiaryAlert--->
