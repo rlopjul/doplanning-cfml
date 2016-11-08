@@ -9,6 +9,8 @@
 	<cfset typologyTableTypeId = 3>
 
 	<cfset filesConvertedDirectory = "files_converted">
+	<cfset excelFileTypes = ".xls,.xlsx,.ods,.csv">
+
 
 	<!--- ----------------------- trasnformFileSize -------------------------------- --->
 
@@ -765,9 +767,7 @@
 
 				<cfelseif APPLICATION.moduleConvertFiles IS true>
 
-					<cfset excelFiles = ".xls,.xlsx,.ods,.csv">
-
-					<cfif listFind(excelFiles, fileQuery.file_type) GT 0>
+					<cfif listFind(excelFileTypes, fileQuery.file_type) GT 0>
 
 						<cfset sourceFileInfo = GetFileInfo(sourceFile)>
 
@@ -917,6 +917,12 @@
 					<cfif sourceFileInfo.size GT 10485760><!--- If file size is greater than 10 MB --->
 
 						<cfreturn {result=false, file_id=#file_id#, message="No se pueden convertir archivos de más de de 10 MB"}>
+
+					</cfif>
+
+					<cfif arguments.file_type IS ".pdf" AND listFind(excelFileTypes, fileQuery.file_type) GT 0 AND sourceFileInfo.size GT 512000><!--- If is Excel to PDF and file size is greater than 500 Kb --->
+
+						<cfreturn {result=false, file_id=#file_id#, message="No se pueden convertir este tipo de archivo de más de 500 Kb a PDF"}>
 
 					</cfif>
 
