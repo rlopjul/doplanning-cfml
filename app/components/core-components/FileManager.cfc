@@ -765,6 +765,17 @@
 
 				<cfelseif APPLICATION.moduleConvertFiles IS true>
 
+					<cfset excelFiles = ".xls,.xlsx,.ods,.csv">
+
+					<cfif listFind(excelFiles, fileQuery.file_type) GT 0>
+
+						<cfset sourceFileInfo = GetFileInfo(sourceFile)>
+
+						<cfif sourceFileInfo.size GT 307200><!--- If file type is Excel and size is greater 300 --->
+							<cfreturn false>
+						</cfif>
+
+					</cfif>
 
 					<!--- Can convert file to PDF --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="checkFileTypeConversion" returnvariable="isFileConvertedToPdf">
@@ -797,7 +808,7 @@
 
 							<cfreturn generateThumbnailResult>
 
-						</cfif>		
+						</cfif>
 
 					</cfif>
 
