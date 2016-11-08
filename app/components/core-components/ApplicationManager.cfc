@@ -347,6 +347,7 @@
 			  <!--- Start an OfficeManager instance with the default settings --->
 			  <cfset Config = createObject("java", "org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration").init()>
 			  <cfset Config.setOfficeHome( APPLICATION.moduleConvertFilesOfficeHome )>
+				<cfset Config.setTaskExecutionTimeout(360000)><!--- 6 minutes --->
 			  <cfset Manager = Config.buildOfficeManager()>
 			  <cfset Manager.start()>
 
