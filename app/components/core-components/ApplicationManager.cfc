@@ -372,6 +372,8 @@
 				<!--- Stop the OfficeManager instance --->
 				<cfset arguments.ApplicationScope.OfficeManager.stop() >
 
+				<cfset StructDelete(arguments.ApplicationScope, "OfficeManager")>
+
 		</cfif>
 
 	</cffunction>
