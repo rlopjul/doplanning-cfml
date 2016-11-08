@@ -63,8 +63,10 @@
 
 
 	<cffunction name="onApplicationEnd" output="false" returntype="void">
+		<cfargument name="ApplicationScope" required="true">
 
 		<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="onApplicationEnd">
+			<cfinvokeargument name="ApplicationScope" value="#arguments.ApplicationScope#">
 		</cfinvoke>
 
 	</cffunction>
