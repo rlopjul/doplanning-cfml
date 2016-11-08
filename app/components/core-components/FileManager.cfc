@@ -771,7 +771,7 @@
 
 						<cfset sourceFileInfo = GetFileInfo(sourceFile)>
 
-						<cfif sourceFileInfo.size GT 307200><!--- If file type is Excel and size is greater 300 --->
+						<cfif sourceFileInfo.size GT 307200><!--- If file type is Excel and size is greater 300 Kb --->
 							<cfreturn false>
 						</cfif>
 
