@@ -8,7 +8,7 @@ CREATE TABLE `doplanning_app`.`app_file_types` (
   PRIMARY KEY  USING BTREE (`file_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `doplanning_app`.`app_file_types` VALUES ('.doc','Word','Word'),('.html','HTML','HTML'),('.odt','OpenDocument','OpenDocument'),('.pdf','PDF','PDF'),('.ppt','PowerPoint','PowerPoint'),('.rtf','Rich Text Format','Rich Text Format'),('.swf','Flash (SWF','Flash (SWF)'),('.xls','Excel','Excel');
+INSERT INTO `doplanning_app`.`app_file_types` VALUES ('.doc','Word','Word'),('.html','HTML','HTML'),('.odt','OpenDocument','OpenDocument'),('.pdf','PDF','PDF'),('.ppt','PowerPoint','PowerPoint'),('.rtf','Rich Text Format','Rich Text Format'),('.swf','Flash (SWF)','Flash (SWF)'),('.xls','Excel','Excel');
 
 CREATE TABLE `doplanning_app`.`app_file_types_conversion` (
   `file_type_from` varchar(10) NOT NULL,
