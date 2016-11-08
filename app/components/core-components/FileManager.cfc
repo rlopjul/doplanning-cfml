@@ -901,7 +901,15 @@
 
 				<cfif FileExists(source)>
 
-					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="120">
+					<cfset sourceFileInfo = GetFileInfo(source)>
+
+					<cfif sourceFileInfo.size GT 10485760><!--- If file size is greater than 10 MB --->
+
+						<cfreturn {result=false, file_id=#file_id#, message="No se pueden convertir archivos de más de de 10 MB"}>
+
+					</cfif>
+
+					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="600"><!--- Timeout: 10 minutes --->
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesConverted" returnvariable="getFilesConvertedQuery">
 							<cfinvokeargument name="file_id" value="#fileQuery.file_id#">
