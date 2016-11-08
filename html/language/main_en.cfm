@@ -710,6 +710,7 @@ curLangTextEn = {
 		"Visualizar":"View",
     "Ver como":"View as",
     "Ver archivo":"View file",
+    "Convertir el archivo en":"Convert file to",
 		"Reemplazar":"Replace",
 		"Asociar a áreas":"Associate to areas",
 		"Modificar datos":"Modify data",

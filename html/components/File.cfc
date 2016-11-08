@@ -522,7 +522,7 @@
 
 			    <cfelse>
 
-			      <a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Ver archivo como" lang="es">
+			      <a href="##" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" title="Convertir el archivo en" lang="es">
 			      <i class="fa fa-eye" aria-hidden="true"></i> <span lang="es">Ver como</span> <span class="caret"></span></a>
 
 			      <ul class="dropdown-menu">
