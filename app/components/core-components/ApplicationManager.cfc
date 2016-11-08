@@ -428,44 +428,6 @@
 			</cfcase>
 
 
-			<cfcase value="era7bioinformatics.com">
-
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
-					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
-					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
-					<cfif isDefined("arguments.emailFrom")>
-						<cfinvokeargument name="emailFrom" value="#arguments.emailFrom#">
-					<cfelse>
-						<cfinvokeargument name="emailFrom" value="doplanning@era7bioinformatics.com">
-					</cfif>
-
-					<cfinvokeargument name="openTokApiKey" value="#arguments.openTokApiKey#">
-					<cfinvokeargument name="openTokApiSecret" value="#arguments.openTokApiSecret#">
-
-					<cfinvokeargument name="serverIp" value="23.23.250.237">
-
-					<cfinvokeargument name="mainUrl" value="https://era7bioinformatics.com">
-					<cfinvokeargument name="signOutUrl" value="https://era7bioinformatics.com/bioinformatics7">
-
-					<!---<cfinvokeargument name="title" value="Era7">--->
-					<cfinvokeargument name="moduleWeb" value="true">
-					<cfinvokeargument name="moduleWebRTC" value="true">
-					<cfinvokeargument name="webFriendlyUrls" value="true">
-
-					<cfinvokeargument name="homeTab" value="true">
-					<cfinvokeargument name="moduleDPDocuments" value="true">
-
-					<cfinvokeargument name="addSchedules" value="#arguments.addSchedules#">
-					<cfinvokeargument name="moduleConvertFiles" value="true">
-
-					<cfinvokeargument name="hideInputLabels" value="true">
-
-					<cfinvokeargument name="logoWebNotifications" value="/assets/logo-era7-bioinformatics.png">
-				</cfinvoke>
-
-			</cfcase>
-
-
 			<cfcase value="genome7.com">
 
 				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
