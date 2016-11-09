@@ -9,6 +9,8 @@
 	<cfset typologyTableTypeId = 3>
 
 	<cfset filesConvertedDirectory = "files_converted">
+	<cfset excelFileTypes = ".xls,.xlsx,.ods,.csv">
+
 
 	<!--- ----------------------- trasnformFileSize -------------------------------- --->
 
@@ -765,6 +767,15 @@
 
 				<cfelseif APPLICATION.moduleConvertFiles IS true>
 
+					<cfif listFind(excelFileTypes, fileQuery.file_type) GT 0>
+
+						<cfset sourceFileInfo = GetFileInfo(sourceFile)>
+
+						<cfif sourceFileInfo.size GT 307200><!--- If file type is Excel and size is greater 300 Kb --->
+							<cfreturn false>
+						</cfif>
+
+					</cfif>
 
 					<!--- Can convert file to PDF --->
 					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="checkFileTypeConversion" returnvariable="isFileConvertedToPdf">
@@ -797,7 +808,7 @@
 
 							<cfreturn generateThumbnailResult>
 
-						</cfif>		
+						</cfif>
 
 					</cfif>
 
@@ -901,7 +912,21 @@
 
 				<cfif FileExists(source)>
 
-					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="120">
+					<cfset sourceFileInfo = GetFileInfo(source)>
+
+					<cfif sourceFileInfo.size GT 10485760><!--- If file size is greater than 10 MB --->
+
+						<cfreturn {result=false, file_id=#file_id#, message="No se pueden convertir archivos de más de de 10 MB"}>
+
+					</cfif>
+
+					<cfif arguments.file_type IS ".pdf" AND listFind(excelFileTypes, fileQuery.file_type) GT 0 AND sourceFileInfo.size GT 512000><!--- If is Excel to PDF and file size is greater than 500 Kb --->
+
+						<cfreturn {result=false, file_id=#file_id#, message="No se pueden convertir este tipo de archivo de más de 500 Kb a PDF"}>
+
+					</cfif>
+
+					<cflock name="#client_abb#_file_#arguments.file_id#_#arguments.file_type#" type="exclusive" timeout="600"><!--- Timeout: 10 minutes --->
 
 						<cfinvoke component="#APPLICATION.coreComponentsPath#/FileQuery" method="getFilesConverted" returnvariable="getFilesConvertedQuery">
 							<cfinvokeargument name="file_id" value="#fileQuery.file_id#">
