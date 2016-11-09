@@ -368,7 +368,7 @@
 	<cffunction name="onApplicationEnd" access="public" returntype="void">
 		<cfargument name="ApplicationScope" required="true">
 
-		<cfif arguments.ApplicationScope.moduleConvertFiles IS true>
+		<cfif isDefined("arguments.ApplicationScope.moduleConvertFiles") AND arguments.ApplicationScope.moduleConvertFiles IS true AND isDefined("arguments.ApplicationScope.OfficeManager")>
 
 				<!--- Stop the OfficeManager instance --->
 				<cfset arguments.ApplicationScope.OfficeManager.stop() >
