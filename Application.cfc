@@ -76,6 +76,13 @@
 
 	<cffunction name="onRequestStart" output="false" returntype="void">
 
+		<!---<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="onApplicationEnd">
+			<cfinvokeargument name="ApplicationScope" value="#APPLICATION#">
+		</cfinvoke>
+
+		<cfinvoke method="onApplicationStart">--->
+
+
 		<cfif NOT isDefined("APPLICATION.dsn")>
 			<cfinvoke method="onApplicationStart">
 		</cfif>
