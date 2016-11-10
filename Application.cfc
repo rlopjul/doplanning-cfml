@@ -46,6 +46,8 @@
 			<cfinvokeargument name="userEmailRequired" value="false">
 			<cfinvokeargument name="moduleAntiVirus" value="true">
 			<cfinvokeargument name="moduleConvertFiles" value="true">
+			<cfinvokeargument name="moduleConvertFilesOfficeHome" value="/opt/libreoffice5.2/">
+			<cfinvokeargument name="moduleThumbnails" value="false">
 
 			<cfinvokeargument name="homeTab" value="true">
 			<cfinvokeargument name="moduleDPDocuments" value="true">
