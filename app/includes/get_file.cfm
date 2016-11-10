@@ -6,11 +6,11 @@ files_directory
 <cfsetting requesttimeout="#APPLICATION.filesTimeout#">
 
 <!--- Thumbnail --->
-<cfif APPLICATION.moduleThumbnails IS true AND isDefined("URL.thumbnail") AND URL.thumbnail IS true>
+<cfif isDefined("URL.thumbnail") AND URL.thumbnail IS true>
 
 	<cfset thumb = true>
 
-	<cfif len(objectFile.thumbnail_format) IS 0>
+	<cfif APPLICATION.moduleThumbnails IS true AND len(objectFile.thumbnail_format) IS 0>
 
 		<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="generateThumbnail" returnvariable="thumb">
 			<cfinvokeargument name="file_id" value="#objectFile.id#">
