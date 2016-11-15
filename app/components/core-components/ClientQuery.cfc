@@ -40,7 +40,7 @@
 				FROM `doplanning_app`.`app_clients`
 				<cfif isDefined("arguments.excludeClients")>
 					<cfif listLen(arguments.excludeClients) GT 1>
-						WHERE abbreviation NOT IN <cfqueryparam value="#arguments.excludeClients#" cfsqltype="cf_sql_varchar" list="true">
+						WHERE abbreviation NOT IN (<cfqueryparam value="#arguments.excludeClients#" cfsqltype="cf_sql_varchar" list="true">)
 					<cfelse>
 						WHERE abbreviation NOT LIKE <cfqueryparam value="#arguments.excludeClients#" cfsqltype="cf_sql_varchar">
 					</cfif>
