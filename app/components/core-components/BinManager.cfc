@@ -10,6 +10,9 @@
 
 		<cfset var method = "deleteAllClientsBinItems">
 
+		<cfset var client_abb = "">
+		<cfset var client_dsn = "">
+
 		<cftry>
 
 			<cfinvoke component="ClientQuery" method="getClients" returnvariable="getClientsQuery">
@@ -79,13 +82,6 @@
 				<cfinvokeargument name="client_abb" value="#arguments.client_abb#">
 				<cfinvokeargument name="client_dsn" value="#arguments.client_dsn#">
 			</cfinvoke>
-
-
-			<!---<cfoutput>
-				Días: #arguments.bin_days#<br/>
-				Fecha: #toDeleteDate#
-
-				<cfdump var="#binItemsQuery#">--->
 
 			<cfloop query="binItemsQuery">
 
