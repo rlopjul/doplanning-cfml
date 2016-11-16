@@ -3646,11 +3646,18 @@
 
 				</cfif>
 
+				<cfif SESSION.client_administrator EQ SESSION.user_id>
 
-				<!--- checkAreaAccess --->
-				<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
-					<cfinvokeargument name="area_id" value="#area_id#">
-				</cfinvoke>
+					<cfset access_result = true>
+
+				<cfelse>
+
+					<!--- canUserAccessToArea --->
+					<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
+						<cfinvokeargument name="area_id" value="#area_id#">
+					</cfinvoke>
+					
+				</cfif>
 
 				<cfif access_result IS false>
 
