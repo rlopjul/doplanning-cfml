@@ -397,7 +397,7 @@
 
 		<cfinclude template="includes/functionStart.cfm">
 
-		<cfif SESSION.client_administrator NEQ user_id><!---Is not an administrator user--->
+		<cfif SESSION.client_administrator NEQ SESSION.user_id><!---Is not an administrator user--->
 
 			<cfinvoke component="AreaManager" method="canUserAccessToArea" returnvariable="access_result">
 				<cfinvokeargument name="area_id" value="#arguments.area_id#">
