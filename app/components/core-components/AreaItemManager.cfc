@@ -250,7 +250,7 @@
 
 					<cfset error_code = 501>
 
-					<cfthrow errorcode="#error_code#">
+					<cfthrow errorcode="#error_code#" message="client_abb:#client_abb#, item_id:#arguments.item_id#, item_type_id:#arguments.itemTypeId#">
 
 				</cfif>
 

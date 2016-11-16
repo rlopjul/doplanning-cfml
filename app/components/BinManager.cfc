@@ -1,4 +1,4 @@
-<!--- Copyright Era7 Information Technologies 2007-2015 --->
+<!--- Copyright Era7 Information Technologies 2007-2016 --->
 
 <cfcomponent output="false">
 
@@ -201,24 +201,6 @@
 						<cfinvokeargument name="client_dsn" value="#client_dsn#">
 					</cfinvoke>
 
-					<!---
-					<cftransaction>
-
-						<cfquery name="changeStatusItemQuery" datasource="#client_dsn#">
-							UPDATE #client_abb#_#itemTypeTable#
-							SET status = <cfqueryparam value="ok" cfsqltype="cf_sql_varchar">
-							WHERE id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-						</cfquery>
-
-						<cfquery name="deleteItemFromBin" datasource="#client_dsn#">
-							DELETE FROM #client_abb#_items_deleted
-							WHERE item_id = <cfqueryparam value="#arguments.item_id#" cfsqltype="cf_sql_integer">
-							AND item_type_id = <cfqueryparam value="#arguments.itemTypeId#" cfsqltype="cf_sql_integer">;
-						</cfquery>
-
-					</cftransaction>
-					--->
-
 				<cfelse><!---Item does not exist--->
 
 					<cfset error_code = 501>
@@ -413,51 +395,6 @@
 					<cfreturn deleteBinItemResult>
 
 				</cfif>
-
-				<!---
-
-				<cfif binItemsQuery.itemTypeId IS 10><!--- File --->
-
-					<!--- deleteFile --->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/FileManager" method="deleteFile" returnvariable="deleteFileResult">
-						<cfinvokeargument name="file_id" value="#binItemsQuery.item_id#">
-						<cfinvokeargument name="user_id" value="#binItemsQuery.delete_user_id#">
-						<cfinvokeargument name="area_id" value="#binItemsQuery.delete_area_id#">
-						<cfinvokeargument name="moveToBin" value="false">
-
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
-
-					<cfif deleteFileResult.result IS false>
-
-						<cfreturn deleteFileResult>
-
-					</cfif>
-
-				<cfelse><!--- Item --->
-
-					<!--- deleteItem --->
-					<cfinvoke component="#APPLICATION.coreComponentsPath#/AreaItemManager" method="deleteItem" returnvariable="deleteItemResult">
-						<cfinvokeargument name="item_id" value="#binItemsQuery.item_id#">
-						<cfinvokeargument name="itemTypeId" value="#binItemsQuery.item_type_id#">
-						<cfinvokeargument name="moveToBin" value="false">
-
-						<cfinvokeargument name="delete_user_id" value="#binItemsQuery.delete_user_id#">
-
-						<cfinvokeargument name="client_abb" value="#client_abb#">
-						<cfinvokeargument name="client_dsn" value="#client_dsn#">
-					</cfinvoke>
-
-					<cfif deleteItemResult.result IS false>
-
-						<cfreturn deleteItemResult>
-
-					</cfif>
-
-				</cfif>
-
-				---->
 
 			</cfloop>
 
