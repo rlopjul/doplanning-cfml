@@ -17,7 +17,7 @@
 
 		<cfinclude template="Application.private.cfm">
 
-		<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+		<cfinvoke component="/app/components/core-components/ApplicationManager" method="setApplicationVars">
 
 			<cfinvokeargument name="emailServerUserName" value="#emailServerUserName#">
 			<cfinvokeargument name="emailServerPassword" value="#emailServerPassword#">
@@ -67,7 +67,7 @@
 	<cffunction name="onApplicationEnd" output="false" returntype="void">
 		<cfargument name="ApplicationScope" required="true">
 
-		<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="onApplicationEnd">
+		<cfinvoke component="/app/components/core-components/ApplicationManager" method="onApplicationEnd">
 			<cfinvokeargument name="ApplicationScope" value="#arguments.ApplicationScope#">
 		</cfinvoke>
 
@@ -76,7 +76,7 @@
 
 	<cffunction name="onRequestStart" output="false" returntype="void">
 
-		<!---<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="onApplicationEnd">
+		<!---<cfinvoke component="/app/components/core-components/ApplicationManager" method="onApplicationEnd">
 			<cfinvokeargument name="ApplicationScope" value="#APPLICATION#">
 		</cfinvoke>
 
