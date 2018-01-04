@@ -211,7 +211,7 @@
 			<cfset APPLICATION.path = arguments.path>
 			<cfset APPLICATION.resourcesPath = APPLICATION.path&"/app">
 			<cfset APPLICATION.uploadFilesPath = APPLICATION.path&"/app/uploadFiles">
-			<cfset APPLICATION.corePath = "/dp-core">
+			<cfset APPLICATION.corePath = "/app">
 			<cfset APPLICATION.componentsPath = APPLICATION.corePath&"/components">
 			<cfset APPLICATION.coreComponentsPath = APPLICATION.componentsPath&"/core-components">
 			<cfset APPLICATION.filesPath = arguments.filesPath>
@@ -398,7 +398,7 @@
 
 			<cfcase value="doplanning.net">
 
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+				<cfinvoke component="/app/components/core-components/ApplicationManager" method="setApplicationVars">
 					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
 					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
 					<cfif isDefined("arguments.emailFrom")>
@@ -430,7 +430,7 @@
 
 			<cfcase value="genome7.com">
 
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+				<cfinvoke component="/app/components/core-components/ApplicationManager" method="setApplicationVars">
 					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
 					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
 					<cfif isDefined("arguments.emailFrom")>
@@ -458,7 +458,7 @@
 
 			<cfcase value="hla.era7software.com">
 
-				<cfinvoke component="/dp-core/components/core-components/ApplicationManager" method="setApplicationVars">
+				<cfinvoke component="/app/components/core-components/ApplicationManager" method="setApplicationVars">
 					<cfinvokeargument name="emailServerUserName" value="#arguments.emailServerUserName#">
 					<cfinvokeargument name="emailServerPassword" value="#arguments.emailServerPassword#">
 					<cfif isDefined("arguments.emailFrom")>
